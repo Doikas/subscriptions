@@ -15,5 +15,20 @@ class Customer extends Model
     public function hosting(){
         return $this->hasMany(Host::class);
     }
+    protected $fillable = [
+        'firstname',
+        'lastname',
+        'email',
+        'website',
+        'phone',
+        'notes',
+
+    ];
+    protected $allowedSorts = [
+        'id',
+        'firstname',
+        'lastname',
+        'email',
+    ];
 
 }

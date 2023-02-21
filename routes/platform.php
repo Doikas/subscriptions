@@ -18,7 +18,9 @@ use App\Orchid\Screens\User\UserProfileScreen;
 use Illuminate\Support\Facades\Route;
 use Tabuna\Breadcrumbs\Trail;
 use App\Orchid\Screens\Customer\CustomerListScreen;
+use App\Orchid\Screens\Customer\CustomerEditScreen;
 use App\Orchid\Screens\Services\ServiceListScreen;
+use App\Orchid\Screens\Domains\DomainListScreen;
 
 /*
 |--------------------------------------------------------------------------
@@ -113,3 +115,22 @@ Route::screen('services', ServiceListScreen::class)
     ->breadcrumbs(fn (Trail $trail) => $trail
         ->parent('platform.index')
         ->push(__('Services'), route('platform.systems.services')));
+
+Route::screen('domains', DomainListScreen::class)
+    ->name('platform.systems.domains')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(__('Domains'), route('platform.systems.domains')));
+
+Route::screen('customers/{customer}/edit', CustomerEditScreen::class)
+    ->name('platform.systems.customers.edit')
+    ->breadcrumbs(fn (Trail $trail, $customer) => $trail
+        ->parent('platform.systems.customers')
+        ->push(__('Customer'), route('platform.systems.customers.edit', $customer)));
+
+// Platform > System > Users > Create
+Route::screen('customers/create', CustomerEditScreen::class)
+    ->name('platform.systems.customers.create')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.systems.customers')
+        ->push(__('Create'), route('platform.systems.customers.create')));

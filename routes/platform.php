@@ -17,7 +17,8 @@ use App\Orchid\Screens\User\UserListScreen;
 use App\Orchid\Screens\User\UserProfileScreen;
 use Illuminate\Support\Facades\Route;
 use Tabuna\Breadcrumbs\Trail;
-use App\Orchid\Screens\CustomerScreen;
+use App\Orchid\Screens\Customer\CustomerListScreen;
+use App\Orchid\Screens\Services\ServiceListScreen;
 
 /*
 |--------------------------------------------------------------------------
@@ -100,5 +101,15 @@ Route::screen('example-advanced', ExampleFieldsAdvancedScreen::class)->name('pla
 //Route::screen('idea', Idea::class, 'platform.screens.idea');
 
 
-Route::screen('customer', CustomerScreen::class)->name('platform.customer');
-
+// Route::screen('customers', CustomerScreen::class)->name('platform.customers');
+Route::screen('customers', CustomerListScreen::class)
+    ->name('platform.systems.customers')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(__('Customers'), route('platform.systems.customers')));
+        
+Route::screen('services', ServiceListScreen::class)
+    ->name('platform.systems.services')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(__('Services'), route('platform.systems.services')));

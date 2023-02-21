@@ -56,7 +56,7 @@ class CustomerEditScreen extends Screen
         return [
             Button::make(__('Create customer'))
                 ->icon('user')
-                ->method('create')
+                ->method('createOrUpdate')
                 ->canSee(!$this->customer->exists),
 
             Button::make(__('Remove'))
@@ -67,7 +67,7 @@ class CustomerEditScreen extends Screen
 
             Button::make(__('Update'))
                 ->icon('check')
-                ->method('update')
+                ->method('createOrUpdate')
                 ->canSee($this->customer->exists),
         ];
         
@@ -89,22 +89,14 @@ class CustomerEditScreen extends Screen
                         ->type(Color::DEFAULT())
                         ->icon('check')
                         ->canSee($this->customer->exists)
-                        ->method('update')
+                        ->method('createOrUpdate')
                 ),
         ];
     }
 
-    public function create(Customer $customer, Request $request)
+    public function createOrUpdate(Customer $customer, Request $request)
     {
         $customer->fill($request->get('customer'))->save();
-
-        Toast::info(__('Customer was created.'));
-
-        return redirect()->route('platform.systems.customers');
-    }
-    public function update(Customer $customer, Request $request)
-    {
-        $customer->fill($request->input('customer'))->save();
 
         Toast::info(__('Customer was created.'));
 

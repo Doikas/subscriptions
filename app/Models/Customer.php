@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Orchid\Filters\Filterable;
 use Orchid\Screen\AsSource;
 
 class Customer extends Model
@@ -12,8 +13,8 @@ class Customer extends Model
     public function services(){
         return $this->hasMany(Services::class);
     }
-    public function hosting(){
-        return $this->hasMany(Host::class);
+    public function domains(){
+        return $this->hasMany(Domain::class);
     }
     protected $fillable = [
         'firstname',
@@ -25,10 +26,10 @@ class Customer extends Model
 
     ];
     protected $allowedSorts = [
-        'id',
         'firstname',
         'lastname',
         'email',
+        'website',
     ];
 
 }

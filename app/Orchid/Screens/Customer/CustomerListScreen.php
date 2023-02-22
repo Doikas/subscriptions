@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace App\Orchid\Screens\Customer;
 
 use Orchid\Screen\Screen;
+use App\Orchid\Layouts\Customer\CustomerFiltersLayout;
 use App\Orchid\Layouts\Customer\CustomerEditLayout;
 use App\Orchid\Layouts\Customer\CustomerListLayout;
 use Illuminate\Http\Request;
@@ -22,7 +23,7 @@ class CustomerListScreen extends Screen
     public function query(): iterable
     {
         return [
-            'customers' => Customer::all(),
+            'customers' => Customer::filters()->defaultSort('id')->paginate(),
                 
         ];
     }
@@ -63,6 +64,7 @@ class CustomerListScreen extends Screen
     public function layout(): iterable
     {
         return [
+            CustomerFiltersLayout::class,
             CustomerListLayout::class,
 
             Layout::modal('asyncEditCustomerModal', CustomerEditLayout::class)

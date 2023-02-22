@@ -38,7 +38,7 @@ class CustomerEditScreen extends Screen
      */
     public function name(): ?string
     {
-        return $this->customer->exists ? 'Edit User' : 'Create User';
+        return $this->customer->exists ? 'Edit Customer' : 'Create Customer';
     }
 
     public function description(): ?string

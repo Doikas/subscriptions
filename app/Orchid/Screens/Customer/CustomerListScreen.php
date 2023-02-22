@@ -23,7 +23,7 @@ class CustomerListScreen extends Screen
     public function query(): iterable
     {
         return [
-            'customers' => Customer::filters()->defaultSort('id')->paginate(),
+            'customers' => Customer::filters(CustomerFiltersLayout::class)->defaultSort('id')->paginate(),
                 
         ];
     }

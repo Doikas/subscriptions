@@ -16,9 +16,12 @@ class CustomerFilter extends Filter
     /**
      * @return string
      */
+
+    public $parameters = ['email'];
+
     public function email(): string
     {
-        return __('Email');
+        return 'Email';
     }
 
     /**
@@ -26,10 +29,7 @@ class CustomerFilter extends Filter
      *
      * @return array|null
      */
-    public function parameters(): ?array
-    {
-        return ['email'];
-    }
+    
 
     /**
      * @param Builder $builder
@@ -38,8 +38,7 @@ class CustomerFilter extends Filter
      */
     public function run(Builder $builder): Builder
     {
-        return $builder->where('email', $this->request->get('email')
-        );
+        return $builder->where('id', $this->request->get('email'));
     }
 
     /**
@@ -49,7 +48,7 @@ class CustomerFilter extends Filter
     {
         return [
             Select::make('email')
-                ->fromModel(Customer::class, 'email')
+                ->fromModel(Customer::class, 'email', 'id')
                 ->empty()
                 ->value($this->request->get('email'))
                 ->title(__('Email')),
@@ -61,6 +60,6 @@ class CustomerFilter extends Filter
      */
     public function value(): string
     {
-        return $this->name().': '.Customer::where($this->request->get('email'))->first()->name;
+        return $this->email(). ': '.Customer::where('id', $this->request->get('email'))->first()->firstname;
     }
 }

@@ -60,6 +60,6 @@ class CustomerFilter extends Filter
      */
     public function value(): string
     {
-        return $this->email(). ': '.Customer::where('id', $this->request->get('email'))->first()->firstname;
+        return $this->email(). ': '.Customer::where('id', $this->request->get('email'))->first()->email;
     }
 }

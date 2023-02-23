@@ -28,6 +28,13 @@ class ServiceEditLayout extends Rows
                 ->title(__('Service Name'))
                 ->placeholder(__('Service Name')),
 
+            Input::make('service.slug')
+                ->type('text')
+                ->max(255)
+                ->required()
+                ->title(__('Slug'))
+                ->placeholder(__('Slug')),
+
             Input::make('service.description')
                 ->type('text')
                 ->max(255)

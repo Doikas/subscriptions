@@ -38,7 +38,7 @@ class CustomerFilter extends Filter
      */
     public function run(Builder $builder): Builder
     {
-        return $builder->where('id', $this->request->get('email'));
+        return $builder->where('email', $this->request->get('email'));
     }
 
     /**
@@ -48,7 +48,7 @@ class CustomerFilter extends Filter
     {
         return [
             Select::make('email')
-                ->fromModel(Customer::class, 'email', 'id')
+                ->fromModel(Customer::class, 'email', 'email')
                 ->empty()
                 ->value($this->request->get('email'))
                 ->title(__('Email')),
@@ -60,6 +60,6 @@ class CustomerFilter extends Filter
      */
     public function value(): string
     {
-        return $this->email(). ': '.Customer::where('id', $this->request->get('email'))->first()->email;
+        return $this->email(). ': '.Customer::where('email', $this->request->get('email'))->first()->email;
     }
 }

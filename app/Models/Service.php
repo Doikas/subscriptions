@@ -15,18 +15,21 @@ class Service extends Model
     }
     protected $fillable = [
         'name',
+        'slug',
         'description',
         'expiration',
     ];
     protected $allowedFilters = [
         'id',
         'name',
+        'slug',
         'description',
         'expiration',
     ];
     protected $allowedSorts = [
         'id',
         'name',
+        'slug',
         'description',
         'expiration',
     ]; 

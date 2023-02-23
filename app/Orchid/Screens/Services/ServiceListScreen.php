@@ -81,6 +81,12 @@ class ServiceListScreen extends Screen
 
     public function saveService(Request $request, Service $service): void
     {
+        $request->validate([
+            'service.slug' => [
+                'required',
+                Rule::unique(Service::class, 'slug')->ignore($service),
+            ],
+        ]);
 
         $service->fill($request->input('service'))->save();
 

@@ -40,6 +40,11 @@ class ServiceListLayout extends Table
                         'service' => $service->id,
                     ])),
 
+            TD::make('slug', __('Slug'))
+                ->sort()
+                ->cantHide()
+                ->filter(Input::make()),
+
             TD::make('description', __('Service Description'))
                 ->sort()
                 ->cantHide()

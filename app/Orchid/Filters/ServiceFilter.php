@@ -38,7 +38,7 @@ class ServiceFilter extends Filter
      */
     public function run(Builder $builder): Builder
     {
-        return $builder->where('id', $this->request->get('name'));
+        return $builder->where('slug', $this->request->get('name'));
     }
 
     /**
@@ -48,7 +48,7 @@ class ServiceFilter extends Filter
     {
         return [
             Select::make('name')
-                ->fromModel(Service::class, 'name', 'id')
+                ->fromModel(Service::class, 'name', 'slug')
                 ->empty()
                 ->value($this->request->get('name'))
                 ->title(__('Name')),
@@ -60,6 +60,6 @@ class ServiceFilter extends Filter
      */
     public function value(): string
     {
-        return $this->name(). ': '.Service::where('id', $this->request->get('name'))->first()->name;
+        return $this->name(). ': '.Service::where('slug', $this->request->get('name'))->first()->name;
     }
 }

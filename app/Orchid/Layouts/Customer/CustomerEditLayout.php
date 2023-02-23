@@ -44,6 +44,12 @@ class CustomerEditLayout extends Rows
                 ->title(__('Website'))
                 ->placeholder(__('Website')),
 
+            Input::make('customer.pronunciation')
+                ->type('text')
+                ->max(255)
+                ->title(__('Pronunciation'))
+                ->placeholder(__('Pronunciation')),
+
             Input::make('customer.phone')
                 ->type('text')
                 ->max(255)

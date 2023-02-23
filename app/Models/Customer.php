@@ -10,9 +10,6 @@ use Orchid\Screen\AsSource;
 class Customer extends Model
 {
     use HasFactory, AsSource, Filterable;
-    public function service(){
-        return $this->hasMany(Service::class);
-    }
     public function subscription(){
         return $this->hasMany(Subscription::class);
     }

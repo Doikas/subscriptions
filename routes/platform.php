@@ -20,7 +20,9 @@ use Tabuna\Breadcrumbs\Trail;
 use App\Orchid\Screens\Customer\CustomerListScreen;
 use App\Orchid\Screens\Customer\CustomerEditScreen;
 use App\Orchid\Screens\Services\ServiceListScreen;
+use App\Orchid\Screens\Services\ServiceEditScreen;
 use App\Orchid\Screens\Subscriptions\SubscriptionListScreen;
+use App\Orchid\Screens\Subscriptions\SubscriptionEditScreen;
 
 /*
 |--------------------------------------------------------------------------
@@ -122,15 +124,30 @@ Route::screen('subscriptions', SubscriptionListScreen::class)
         ->parent('platform.index')
         ->push(__('Subscriptions'), route('platform.systems.subscriptions')));
 
+// Platform > System > Customers > Edit
 Route::screen('customers/{customer}/edit', CustomerEditScreen::class)
     ->name('platform.systems.customers.edit')
     ->breadcrumbs(fn (Trail $trail, $customer) => $trail
         ->parent('platform.systems.customers')
         ->push(__('Customer'), route('platform.systems.customers.edit', $customer)));
 
-// Platform > System > Users > Create
+// Platform > System > Customers > Create
 Route::screen('customers/create', CustomerEditScreen::class)
     ->name('platform.systems.customers.create')
     ->breadcrumbs(fn (Trail $trail) => $trail
         ->parent('platform.systems.customers')
         ->push(__('Create'), route('platform.systems.customers.create')));
+
+// Platform > System > Services > Edit
+Route::screen('services/{service}/edit', ServiceEditScreen::class)
+->name('platform.systems.services.edit')
+->breadcrumbs(fn (Trail $trail, $service) => $trail
+    ->parent('platform.systems.services')
+    ->push(__('Service'), route('platform.systems.services.edit', $service)));
+
+// Platform > System > Services > Create
+Route::screen('services/create', ServiceEditScreen::class)
+->name('platform.systems.services.create')
+->breadcrumbs(fn (Trail $trail) => $trail
+    ->parent('platform.systems.services')
+    ->push(__('Create'), route('platform.systems.services.create')));

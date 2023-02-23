@@ -3,6 +3,15 @@
 namespace App\Orchid\Screens\Services;
 
 use Orchid\Screen\Screen;
+use App\Orchid\Layouts\Service\ServiceFiltersLayout;
+use App\Orchid\Layouts\Service\ServiceEditLayout;
+use App\Orchid\Layouts\Service\ServiceListLayout;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Orchid\Screen\Actions\Link;
+use Orchid\Support\Facades\Layout;
+use Orchid\Support\Facades\Toast;
+use App\Models\Service;
 
 class ServiceListScreen extends Screen
 {
@@ -13,7 +22,9 @@ class ServiceListScreen extends Screen
      */
     public function query(): iterable
     {
-        return [];
+        return [
+            'services' => Service::filters(ServiceFiltersLayout::class)->defaultSort('id')->paginate(),
+        ];
     }
 
     /**
@@ -26,6 +37,11 @@ class ServiceListScreen extends Screen
         return 'Services';
     }
 
+    public function description(): ?string
+    {
+        return 'All registered services';
+    }
+
     /**
      * The screen's action buttons.
      *
@@ -33,7 +49,11 @@ class ServiceListScreen extends Screen
      */
     public function commandBar(): iterable
     {
-        return [];
+        return [
+            Link::make(__('Add'))
+                ->icon('plus')
+                ->route('platform.systems.services.create'),
+        ];
     }
 
     /**
@@ -43,6 +63,34 @@ class ServiceListScreen extends Screen
      */
     public function layout(): iterable
     {
-        return [];
+        return [
+            ServiceFiltersLayout::class,
+            ServiceListLayout::class,
+
+            Layout::modal('asyncEditServiceModal', ServiceEditLayout::class)
+                ->async('asyncGetService'),
+        ];
+    }
+
+    public function asyncGetService(Service $service): iterable
+    {
+        return [
+            'service' => $service,
+        ];
+    }
+
+    public function saveService(Request $request, Service $service): void
+    {
+
+        $service->fill($request->input('service'))->save();
+
+        Toast::info(__('Service was saved.'));
+    }
+
+    public function remove(Request $request): void
+    {
+        Service::findOrFail($request->get('id'))->delete();
+
+        Toast::info(__('Service was removed'));
     }
 }

@@ -3,6 +3,15 @@
 namespace App\Orchid\Screens\Subscriptions;
 
 use Orchid\Screen\Screen;
+use App\Orchid\Layouts\Subscription\SubscriptionFiltersLayout;
+use App\Orchid\Layouts\Subscription\SubscriptionEditLayout;
+use App\Orchid\Layouts\Subscription\SubscriptionListLayout;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Orchid\Screen\Actions\Link;
+use Orchid\Support\Facades\Layout;
+use Orchid\Support\Facades\Toast;
+use App\Models\Subscription;
 
 class SubscriptionListScreen extends Screen
 {
@@ -13,7 +22,9 @@ class SubscriptionListScreen extends Screen
      */
     public function query(): iterable
     {
-        return [];
+        return [
+            'subscriptions' => Subscription::filters()->defaultSort('id', 'desc')->paginate(),
+        ];
     }
 
     /**
@@ -23,7 +34,12 @@ class SubscriptionListScreen extends Screen
      */
     public function name(): ?string
     {
-        return 'Subscriptions';
+        return 'Manage Subscriptions';
+    }
+
+    public function description(): ?string
+    {
+        return 'All Registered Subscriptions';
     }
 
     /**
@@ -33,7 +49,11 @@ class SubscriptionListScreen extends Screen
      */
     public function commandBar(): iterable
     {
-        return [];
+        return [
+            Link::make(__('Add'))
+                ->icon('plus')
+                ->href(route('platform.systems.subscriptions.create')),
+        ];
     }
 
     /**
@@ -43,6 +63,8 @@ class SubscriptionListScreen extends Screen
      */
     public function layout(): iterable
     {
-        return [];
+        return [
+            SubscriptionListLayout::class
+        ];
     }
 }

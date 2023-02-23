@@ -43,7 +43,7 @@ class CustomerListLayout extends Table
                 ->filter(Input::make())
                 ->render(fn (Customer $customer) => ModalToggle::make($customer->email)
                     ->modal('asyncEditCustomerModal')
-                    ->modalTitle('Edit')
+                    ->modalTitle($customer->firstname." ".$customer->lastname)
                     ->method('saveCustomer')
                     ->asyncParameters([
                         'customer' => $customer->id,
@@ -53,6 +53,11 @@ class CustomerListLayout extends Table
                     ->sort()
                     ->cantHide()
                     ->filter(Input::make()),
+                    
+            TD::make('pronunciation', __('Pronunciation'))
+                    ->sort()
+                    ->cantHide()
+                    ->filter(Input::make()),     
 
             TD::make('phone', __('Phone'))
                     ->sort()

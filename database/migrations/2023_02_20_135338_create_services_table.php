@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('description')->nullable();
-            $table->timestamp('expirasion')->nullable();
+            $table->timestamp('expiration')->nullable();
             $table->timestamps();
         });
     }

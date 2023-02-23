@@ -10,11 +10,11 @@ use Orchid\Screen\AsSource;
 class Customer extends Model
 {
     use HasFactory, AsSource, Filterable;
-    public function services(){
-        return $this->hasMany(Services::class);
+    public function service(){
+        return $this->hasMany(Service::class);
     }
-    public function domains(){
-        return $this->hasMany(Domain::class);
+    public function subscription(){
+        return $this->hasMany(Subscription::class);
     }
     protected $fillable = [
         'firstname',
@@ -22,6 +22,7 @@ class Customer extends Model
         'email',
         'website',
         'phone',
+        'pronunciation',
         'notes',
 
     ];
@@ -30,6 +31,7 @@ class Customer extends Model
         'firstname',
         'lastname',
         'email',
+        'pronunciation',
         'website',
     ];
     protected $allowedSorts = [
@@ -37,6 +39,8 @@ class Customer extends Model
         'firstname',
         'lastname',
         'email',
+        'pronunciation',
+        'phone',
         'website',
         'updated_at',
         'created_at',

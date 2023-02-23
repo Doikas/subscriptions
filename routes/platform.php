@@ -20,7 +20,7 @@ use Tabuna\Breadcrumbs\Trail;
 use App\Orchid\Screens\Customer\CustomerListScreen;
 use App\Orchid\Screens\Customer\CustomerEditScreen;
 use App\Orchid\Screens\Services\ServiceListScreen;
-use App\Orchid\Screens\Domains\DomainListScreen;
+use App\Orchid\Screens\Subscriptions\SubscriptionListScreen;
 
 /*
 |--------------------------------------------------------------------------
@@ -116,11 +116,11 @@ Route::screen('services', ServiceListScreen::class)
         ->parent('platform.index')
         ->push(__('Services'), route('platform.systems.services')));
 
-Route::screen('domains', DomainListScreen::class)
-    ->name('platform.systems.domains')
+Route::screen('subscriptions', SubscriptionListScreen::class)
+    ->name('platform.systems.subscriptions')
     ->breadcrumbs(fn (Trail $trail) => $trail
         ->parent('platform.index')
-        ->push(__('Domains'), route('platform.systems.domains')));
+        ->push(__('Subscriptions'), route('platform.systems.subscriptions')));
 
 Route::screen('customers/{customer}/edit', CustomerEditScreen::class)
     ->name('platform.systems.customers.edit')

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Orchid\Screen\AsSource;
 
-class Domain extends Model
+class Subscription extends Model
 {
     use HasFactory, AsSource;
     public function customer(){

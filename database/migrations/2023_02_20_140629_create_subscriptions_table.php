@@ -13,13 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('domains', function (Blueprint $table) {
+        Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('customer_id')->constrained()->onDelete('cascade');
-            $table->string('domain',250);
+            $table->foreignId('services_id')->constrained()->onDelete('cascade');
+            $table->string('domain',250)->nullable();
             $table->float('price');
-            $table->date('expired_at');
             $table->boolean('paid_status')->default(0);
+            $table->timestamp('start_date')->nullable();
+            $table->timestamp('expired_date')->nullable();
             $table->string('notes')->nullable();
             $table->timestamps();
         });
@@ -32,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('domains');
+        Schema::dropIfExists('subscriptions');
     }
 };

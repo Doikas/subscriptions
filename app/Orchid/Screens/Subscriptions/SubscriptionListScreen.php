@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Orchid\Screens\Domains;
+namespace App\Orchid\Screens\Subscriptions;
 
 use Orchid\Screen\Screen;
 
-class DomainEditScreen extends Screen
+class SubscriptionListScreen extends Screen
 {
     /**
      * Fetch data to be displayed on the screen.
@@ -23,7 +23,7 @@ class DomainEditScreen extends Screen
      */
     public function name(): ?string
     {
-        return 'DomainEditScreen';
+        return 'Subscriptions';
     }
 
     /**

@@ -15,11 +15,9 @@ return new class extends Migration
     {
         Schema::create('services', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_id')->constrained()->onDelete('cascade');
-            $table->float('price');
-            $table->date('expired_at');
-            $table->boolean('paid_status')->default(0);
-            $table->string('notes')->nullable();
+            $table->string('name');
+            $table->string('description')->nullable();
+            $table->timestamp('expirasion')->nullable();
             $table->timestamps();
         });
     }

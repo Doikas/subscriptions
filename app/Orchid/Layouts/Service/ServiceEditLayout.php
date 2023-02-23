@@ -6,6 +6,8 @@ namespace App\Orchid\Layouts\Service;
 
 use Orchid\Screen\Field;
 use Orchid\Screen\Fields\Input;
+use Orchid\Screen\Fields\DateTimer;
+use Carbon\Carbon;
 use Orchid\Screen\Layouts\Rows;
 
 class ServiceEditLayout extends Rows
@@ -17,6 +19,7 @@ class ServiceEditLayout extends Rows
      */
     public function fields(): array
     {
+        
         return [
             Input::make('service.name')
                 ->type('text')
@@ -32,9 +35,19 @@ class ServiceEditLayout extends Rows
                 ->placeholder(__('Description')),
 
             Input::make('service.expiration')
-                ->type('date')
-                ->title(__('Expiration Date'))
-                ->placeholder(__('Expiration Date')),
+                ->type('number')
+                ->title(__('Expiration Number of Years'))
+                ->placeholder(__('Years')),
         ];
     }
 }
+// $currentDate = Carbon::now('Europe/Athens');
+        // $defaultDate = $currentDate->add(1, 'year');
+
+// DateTimer::make('service.expiration')
+//                 ->title('Expiration Date')
+//                 ->value($defaultDate)
+//                 ->allowInput()
+//                 ->enableTime(),
+
+//DateTimer::make() sto list arxeio

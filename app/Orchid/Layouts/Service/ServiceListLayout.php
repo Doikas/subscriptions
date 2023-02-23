@@ -9,6 +9,7 @@ use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\DropDown;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Actions\ModalToggle;
+use Orchid\Screen\Fields\DateTimer;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Layouts\Persona;
 use Orchid\Screen\Layouts\Table;
@@ -47,8 +48,7 @@ class ServiceListLayout extends Table
             TD::make('expiration', __('Expiration'))
                     ->sort()
                     ->cantHide()
-                    ->filter(Input::make())
-                    ->render(fn (Service $service) => $service->expiration->toDateTimeString()),
+                    ->filter(Input::make()),
                     
 
             // TD::make('updated_at', __('Last edit'))

@@ -8,6 +8,8 @@ use Orchid\Support\Color;
 use Orchid\Support\Facades\Layout;
 use Orchid\Support\Facades\Toast;
 use App\Models\Subscription;
+use App\Models\Service;
+use App\Models\Customer;
 use App\Orchid\Layouts\Subscription\SubscriptionEditLayout;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -19,9 +21,14 @@ class SubscriptionEditScreen extends Screen
      *
      * @return array
      */
-    public function query(): iterable
+    public $subscription;
+    public function query(Subscription $subscription): iterable
     {
-        return [];
+        
+        return [
+            
+            'subscription'        => $subscription,
+        ];
     }
 
     /**
@@ -31,7 +38,12 @@ class SubscriptionEditScreen extends Screen
      */
     public function name(): ?string
     {
-        return 'SubscriptionEditScreen';
+        return $this->subscription->exists ? 'Edit Subscription' : 'Create Subscription';
+    }
+
+    public function description(): ?string
+    {
+        return 'Details';
     }
 
     /**
@@ -41,7 +53,23 @@ class SubscriptionEditScreen extends Screen
      */
     public function commandBar(): iterable
     {
-        return [];
+        return [
+            Button::make(__('Create subscription'))
+                ->icon('list')
+                ->method('createOrUpdate')
+                ->canSee(!$this->subscription->exists),
+
+            Button::make(__('Remove'))
+                ->icon('trash')
+                ->confirm(__('Once the subscription is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.'))
+                ->method('remove')
+                ->canSee($this->subscription->exists),
+
+            Button::make(__('Update'))
+                ->icon('check')
+                ->method('createOrUpdate')
+                ->canSee($this->subscription->exists),
+        ];
     }
 
     /**
@@ -51,6 +79,26 @@ class SubscriptionEditScreen extends Screen
      */
     public function layout(): iterable
     {
-        return [];
+        return [
+            Layout::block(SubscriptionEditLayout::class)
+                ->title(__('Subscription Information'))
+                ->description(__('Update your account\'s profile information and email address.'))
+                ->commands(
+                    Button::make(__('Update'))
+                        ->type(Color::DEFAULT())
+                        ->icon('check')
+                        ->canSee($this->subscription->exists)
+                        ->method('createOrUpdate')
+                ),
+        ];
+    }
+
+    public function createOrUpdate(Subscription $subscription, Request $request)
+    {
+        $subscription->fill($request->get('subscription'))->save();
+
+        Toast::info(__('Subscription was created.'));
+
+        return redirect()->route('platform.systems.subscriptions');
     }
 }

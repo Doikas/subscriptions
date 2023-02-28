@@ -1,0 +1,90 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Orchid\Layouts\Subscription;
+
+use Orchid\Screen\Field;
+use Orchid\Screen\Fields\Input;
+use Orchid\Screen\Fields\Select;
+use Orchid\Screen\Fields\DateTimer;
+use Carbon\Carbon;
+use Orchid\Screen\Layouts\Rows;
+use Illuminate\Database\Eloquent\Builder;
+use Orchid\Screen\Fields\Relation;
+use Orchid\Screen\Fields\CheckBox;
+use App\Models\Service;
+use App\Models\Customer;
+
+class SubscriptionEditLayout extends Rows
+{
+    /**
+     * The screen's layout elements.
+     *
+     * @return Field[]
+     * 
+     * 
+     */
+    public function fields(): array
+    {
+        $yearexpired = 'service.expiration';
+        $currentDate = Carbon::now('Europe/Athens');
+        $defaultDate = $currentDate->add($yearexpired, 'year');
+        
+        
+        return [
+            Select::make('service.name')
+                ->fromModel(Service::class, 'name')
+                ->title(__('Service')),
+
+            Select::make('customer.fullname')
+                ->fromModel(Customer::class, 'firstname', 'lastname')
+                
+                ->title(__('Customer')),
+
+            Input::make('subscription.domain')
+                ->type('text')
+                ->max(255)
+                ->title(__('Domain'))
+                ->placeholder(__('Domain')),
+
+            Input::make('subscription.price')
+                ->type('float')
+                ->title(__('Price'))
+                ->placeholder(__('Price')),
+
+            CheckBox::make('subscription.paid_status')
+                ->value(0)
+                ->title(__('Paid Status'))
+                ->placeholder(__('Paid Status')),
+
+            DateTimer::make('subscription.start_date')
+                    ->title('Start Date')
+                    ->value($currentDate)
+                    ->allowInput()
+                    ->enableTime(),
+
+            DateTimer::make('subscription.expired_date')
+                    ->title('Expired Date')
+                    ->value($defaultDate)
+                    ->allowInput()
+                    ->enableTime(),
+
+            Input::make('subscription.notes')
+                ->type('text')
+                ->max(400)
+                ->title(__('Notes'))
+                ->placeholder(__('Notes')),
+        ];
+    }
+}
+// $currentDate = Carbon::now('Europe/Athens');
+        // $defaultDate = $currentDate->add(1, 'year');
+
+// DateTimer::make('service.expiration')
+//                 ->title('Expiration Date')
+//                 ->value($defaultDate)
+//                 ->allowInput()
+//                 ->enableTime(),
+
+//DateTimer::make() sto list arxeio

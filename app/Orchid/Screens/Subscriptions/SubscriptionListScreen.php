@@ -12,6 +12,9 @@ use Orchid\Screen\Actions\Link;
 use Orchid\Support\Facades\Layout;
 use Orchid\Support\Facades\Toast;
 use App\Models\Subscription;
+use App\Models\Customer;
+use App\Models\Service;
+use GuzzleHttp\Psr7\Query;
 
 class SubscriptionListScreen extends Screen
 {
@@ -23,7 +26,8 @@ class SubscriptionListScreen extends Screen
     public function query(): iterable
     {
         return [
-            'subscriptions' => Subscription::filters()->defaultSort('id', 'desc')->paginate(),
+            
+            'subscriptions' => Subscription::with('customer','service')->filters(SubscriptionFiltersLayout::class)->defaultSort('expired_date', 'asc')->paginate(),
         ];
     }
 
@@ -64,7 +68,33 @@ class SubscriptionListScreen extends Screen
     public function layout(): iterable
     {
         return [
-            SubscriptionListLayout::class
+            SubscriptionFiltersLayout::class,
+            SubscriptionListLayout::class,
+
+            Layout::modal('asyncEditSubscriptionModal', SubscriptionEditLayout::class)
+                ->async('asyncGetSubscription'),
         ];
+    }
+
+    public function asyncGetSubscription(Subscription $subscription): iterable
+    {
+        return [
+            'subscription' => $subscription,
+        ];
+    }
+
+    public function saveSubscription(Request $request, Subscription $subscription): void
+    {
+
+        $subscription->fill($request->input('subscription'))->save();
+
+        Toast::info(__('Subscription was saved.'));
+    }
+
+    public function remove(Request $request): void
+    {
+        Subscription::findOrFail($request->get('id'))->delete();
+
+        Toast::info(__('Subscription was removed'));
     }
 }

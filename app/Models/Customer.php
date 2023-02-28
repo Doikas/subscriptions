@@ -42,5 +42,10 @@ class Customer extends Model
         'updated_at',
         'created_at',
     ];
+    public function getFullnameAttribute()
+    {
+        return "{$this->firstname} {$this->lastname}";
+    }
+    
 
 }

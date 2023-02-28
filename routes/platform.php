@@ -151,3 +151,17 @@ Route::screen('services/create', ServiceEditScreen::class)
 ->breadcrumbs(fn (Trail $trail) => $trail
     ->parent('platform.systems.services')
     ->push(__('Create'), route('platform.systems.services.create')));
+
+    // Platform > System > Subscription > Edit
+Route::screen('subscriptions/{subscription}/edit', SubscriptionEditScreen::class)
+->name('platform.systems.subscriptions.edit')
+->breadcrumbs(fn (Trail $trail, $subscription) => $trail
+    ->parent('platform.systems.subscriptions')
+    ->push(__('Subscription'), route('platform.systems.subscriptions.edit', $subscription)));
+
+// Platform > System > Subscription > Create
+Route::screen('subscriptions/create', SubscriptionEditScreen::class)
+->name('platform.systems.subscriptions.create')
+->breadcrumbs(fn (Trail $trail) => $trail
+    ->parent('platform.systems.subscriptions')
+    ->push(__('Create'), route('platform.systems.subscriptions.create')));

@@ -48,13 +48,3 @@ class ServiceEditLayout extends Rows
         ];
     }
 }
-// $currentDate = Carbon::now('Europe/Athens');
-        // $defaultDate = $currentDate->add(1, 'year');
-
-// DateTimer::make('service.expiration')
-//                 ->title('Expiration Date')
-//                 ->value($defaultDate)
-//                 ->allowInput()
-//                 ->enableTime(),
-
-//DateTimer::make() sto list arxeio

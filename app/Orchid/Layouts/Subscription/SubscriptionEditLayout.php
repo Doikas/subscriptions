@@ -15,6 +15,7 @@ use Orchid\Screen\Fields\Relation;
 use Orchid\Screen\Fields\CheckBox;
 use App\Models\Service;
 use App\Models\Customer;
+use App\Models\Subscription;
 
 class SubscriptionEditLayout extends Rows
 {
@@ -27,19 +28,19 @@ class SubscriptionEditLayout extends Rows
      */
     public function fields(): array
     {
+
         $yearexpired = 'service.expiration';
         $currentDate = Carbon::now('Europe/Athens');
         $defaultDate = $currentDate->add($yearexpired, 'year');
         
         
         return [
-            Select::make('service.name')
-                ->fromModel(Service::class, 'name')
+            Relation::make('subscription.service_id')
+                ->fromModel(Service::class, 'name', 'id')
                 ->title(__('Service')),
 
-            Select::make('customer.fullname')
-                ->fromModel(Customer::class, 'firstname', 'lastname')
-                
+            Relation::make('subscription.customer_id')
+                ->fromModel(Customer::class, 'lastname', 'id')
                 ->title(__('Customer')),
 
             Input::make('subscription.domain')

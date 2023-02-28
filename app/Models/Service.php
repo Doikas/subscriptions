@@ -14,6 +14,7 @@ class Service extends Model
         return $this->hasMany(Subscription::class);
     }
     protected $fillable = [
+        
         'name',
         'slug',
         'description',

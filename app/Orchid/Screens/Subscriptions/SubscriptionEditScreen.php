@@ -7,12 +7,15 @@ use Orchid\Screen\Actions\Button;
 use Orchid\Support\Color;
 use Orchid\Support\Facades\Layout;
 use Orchid\Support\Facades\Toast;
+use Illuminate\Validation\Rule;
 use App\Models\Subscription;
 use App\Models\Service;
 use App\Models\Customer;
 use App\Orchid\Layouts\Subscription\SubscriptionEditLayout;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\DB;
 
 class SubscriptionEditScreen extends Screen
 {
@@ -95,6 +98,8 @@ class SubscriptionEditScreen extends Screen
 
     public function createOrUpdate(Subscription $subscription, Request $request)
     {
+
+
         $subscription->fill($request->get('subscription'))->save();
 
         Toast::info(__('Subscription was created.'));

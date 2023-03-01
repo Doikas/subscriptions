@@ -29,9 +29,11 @@ class SubscriptionEditLayout extends Rows
     public function fields(): array
     {
 
-        $yearexpired = 'service.expiration';
+        // $yearexpired = 'service.expiration';
+        $toda = Carbon::now('Europe/Athens');
         $currentDate = Carbon::now('Europe/Athens');
-        $defaultDate = $currentDate->add($yearexpired, 'year');
+        $defaultDate = $currentDate->add(1, 'year');
+        // $defaultDate = $currentDate->add($yearexpired, 'year');
         
         
         return [
@@ -60,7 +62,7 @@ class SubscriptionEditLayout extends Rows
 
             DateTimer::make('subscription.start_date')
                     ->title('Start Date')
-                    ->value($currentDate)
+                    ->value($toda)
                     ->allowInput()
                     ->enableTime(),
 

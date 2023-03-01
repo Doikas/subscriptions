@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('service_id')->constrained()->onDelete('cascade');
             $table->string('domain',250)->nullable();
             $table->float('price');
-            $table->boolean('paid_status')->default(0);
+            $table->boolean('paid_status')->default(false);
             $table->timestamp('start_date')->nullable();
             $table->timestamp('expired_date')->nullable();
             $table->string('notes')->nullable();

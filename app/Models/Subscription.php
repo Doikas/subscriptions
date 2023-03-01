@@ -30,6 +30,9 @@ class Subscription extends Model
     ];
     protected $allowedFilters = [
         'id',
+        'customer_id',
+        'service_id',
+        'customer.email',
         'domain',
         'price',
         'paid_status',

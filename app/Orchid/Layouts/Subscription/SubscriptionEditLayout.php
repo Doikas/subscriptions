@@ -40,7 +40,7 @@ class SubscriptionEditLayout extends Rows
                 ->title(__('Service')),
 
             Relation::make('subscription.customer_id')
-                ->fromModel(Customer::class, 'lastname', 'id')
+                ->fromModel(Customer::class, 'email', 'id')
                 ->title(__('Customer')),
 
             Input::make('subscription.domain')
@@ -54,10 +54,9 @@ class SubscriptionEditLayout extends Rows
                 ->title(__('Price'))
                 ->placeholder(__('Price')),
 
-            CheckBox::make('subscription.paid_status')
-                ->value(0)
-                ->title(__('Paid Status'))
-                ->placeholder(__('Paid Status')),
+            // Checkbox::make('subscription.paid_status')
+            //         ->title(__('Paid Status'))
+            //         ->sendTrueOrFalse(),
 
             DateTimer::make('subscription.start_date')
                     ->title('Start Date')

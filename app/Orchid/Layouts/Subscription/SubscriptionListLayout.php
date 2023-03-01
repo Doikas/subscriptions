@@ -45,6 +45,11 @@ class SubscriptionListLayout extends Table
                 ->cantHide()
                 ->filter(Input::make()),
 
+            TD::make('customer.email', __('Customer Email'))
+                ->sort()
+                ->cantHide()
+                ->filter(Input::make()),
+
             TD::make('domain', __('Domain'))
                 ->sort()
                 ->cantHide()
@@ -55,10 +60,12 @@ class SubscriptionListLayout extends Table
                     ->cantHide()
                     ->filter(Input::make()),
 
-            TD::make('paid_status', __('Paid Status'))
-                    ->sort()
-                    ->cantHide()
-                    ->filter(CheckBox::make()),
+            // TD::make('paid_status', __('Paid Status'))
+            // ->render(function ($checkbox){
+            //     foreach($checkbox as $checkbox){
+                
+            //     if ($checkbox==true){return "Paid";} return "Unpaid";
+            // }}),
 
             TD::make('start_date', __('Start Date'))
                     ->sort()

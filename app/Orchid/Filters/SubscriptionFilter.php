@@ -40,7 +40,7 @@ class SubscriptionFilter extends Filter
      */
     public function run(Builder $builder): Builder
     {
-        return $builder->where('id', $this->request->get('email'));
+        return $builder->where('customer_id', $this->request->get('email'));
     }
 
     /**

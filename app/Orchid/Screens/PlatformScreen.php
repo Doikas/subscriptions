@@ -7,6 +7,13 @@ namespace App\Orchid\Screens;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;
 use Orchid\Support\Facades\Layout;
+use App\Orchid\Layouts\Subscription\SubscriptionFiltersLayout;
+use App\Orchid\Layouts\Subscription\SubscriptionEditLayout;
+use App\Orchid\Layouts\Subscription\SubscriptionListLayout;
+use App\Models\Subscription;
+use Illuminate\Http\Request;
+use Orchid\Support\Facades\Toast;
+use Carbon\Carbon;
 
 class PlatformScreen extends Screen
 {
@@ -15,10 +22,6 @@ class PlatformScreen extends Screen
      *
      * @return array
      */
-    public function query(): iterable
-    {
-        return [];
-    }
 
     /**
      * The name of the screen displayed in the header.
@@ -27,7 +30,7 @@ class PlatformScreen extends Screen
      */
     public function name(): ?string
     {
-        return 'Get Started';
+        return 'Wdesign Subscriptions';
     }
 
     /**
@@ -37,7 +40,7 @@ class PlatformScreen extends Screen
      */
     public function description(): ?string
     {
-        return 'Welcome to your Orchid application.';
+        return 'Table of subscriptions expiring in less than 30 days';
     }
 
     /**
@@ -48,17 +51,17 @@ class PlatformScreen extends Screen
     public function commandBar(): iterable
     {
         return [
-            Link::make('Website')
-                ->href('http://orchid.software')
-                ->icon('globe-alt'),
+            // Link::make('Website')
+            //     ->href('http://orchid.software')
+            //     ->icon('globe-alt'),
 
-            Link::make('Documentation')
-                ->href('https://orchid.software/en/docs')
-                ->icon('docs'),
+            // Link::make('Documentation')
+            //     ->href('https://orchid.software/en/docs')
+            //     ->icon('docs'),
 
-            Link::make('GitHub')
-                ->href('https://github.com/orchidsoftware/platform')
-                ->icon('social-github'),
+            // Link::make('GitHub')
+            //     ->href('https://github.com/orchidsoftware/platform')
+            //     ->icon('social-github'),
         ];
     }
 
@@ -67,10 +70,63 @@ class PlatformScreen extends Screen
      *
      * @return \Orchid\Screen\Layout[]
      */
+    public function query(): iterable
+    {
+        $present = Carbon::now('Europe/Athens');
+        $plupres = $present->add(30, 'day');
+        return [
+            
+            'subscriptions' => Subscription::with('customer','service')->where('expired_date', '<', $plupres)->filters(SubscriptionFiltersLayout::class)->defaultSort('expired_date', 'asc')->paginate(),
+        ];
+    }
+
+    /**
+     * The name of the screen displayed in the header.
+     *
+     * @return string|null
+     */
+
+    /**
+     * The screen's action buttons.
+     *
+     * @return \Orchid\Screen\Action[]
+     */
+
+    /**
+     * The screen's layout elements.
+     *
+     * @return \Orchid\Screen\Layout[]|string[]
+     */
     public function layout(): iterable
     {
         return [
-            Layout::view('platform::partials.welcome'),
+            SubscriptionFiltersLayout::class,
+            SubscriptionListLayout::class,
+
+            Layout::modal('asyncEditSubscriptionModal', SubscriptionEditLayout::class)
+                ->async('asyncGetSubscription'),
         ];
+    }
+
+    public function asyncGetSubscription(Subscription $subscription): iterable
+    {
+        return [
+            'subscription' => $subscription,
+        ];
+    }
+
+    public function saveSubscription(Request $request, Subscription $subscription): void
+    {
+
+        $subscription->fill($request->input('subscription'))->save();
+
+        Toast::info(__('Subscription was saved.'));
+    }
+
+    public function remove(Request $request): void
+    {
+        Subscription::findOrFail($request->get('id'))->delete();
+
+        Toast::info(__('Subscription was removed'));
     }
 }

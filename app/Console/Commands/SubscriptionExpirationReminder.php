@@ -39,7 +39,7 @@ class SubscriptionExpirationReminder extends Command
     public function handle()
     {
         
-        $subscription = Subscription::joinRelationship('customers','services')->get();
+        $subscription = Subscription::joinRelationship('customers','services');
 
         foreach($subscription as $sub){
             $present = Carbon::now('Europe/Athens');

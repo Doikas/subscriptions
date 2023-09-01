@@ -49,7 +49,7 @@ class SubscriptionEditLayout extends Rows
                 ->title(__('Service')),
 
             Relation::make('subscription.customer_id')
-                ->fromModel(Customer::class, 'email', 'id')
+                ->fromModel(Customer::class, 'fullname', 'id')
                 ->title(__('Customer')),
 
             Input::make('subscription.domain')

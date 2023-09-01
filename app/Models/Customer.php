@@ -21,6 +21,7 @@ class Customer extends Model
         'phone',
         'pronunciation',
         'notes',
+        'fullname',
 
     ];
     protected $allowedFilters = [
@@ -30,6 +31,7 @@ class Customer extends Model
         'email',
         'pronunciation',
         'website',
+        'fullname',
     ];
     protected $allowedSorts = [
         'id',
@@ -38,13 +40,14 @@ class Customer extends Model
         'email',
         'pronunciation',
         'phone',
+        'fullname',
         'website',
         'updated_at',
         'created_at',
     ];
     public function getFullnameAttribute()
     {
-        return $this->attributes['firstname'] . ' ' . $this->attributes['lastname'];
+        return "{$this->firstname} {$this->lastname}";
     }
     
 

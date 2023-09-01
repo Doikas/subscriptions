@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('notes')->nullable();
             $table->string('pronunciation')->nullable();
             $table->timestamps();
+            $table->string('fullname')->virtualAs('CONCAT(firstname, " ", lastname)');
         });
     }
 

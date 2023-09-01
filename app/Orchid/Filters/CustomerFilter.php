@@ -7,51 +7,54 @@ namespace App\Orchid\Filters;
 use Illuminate\Database\Eloquent\Builder;
 use Orchid\Filters\Filter;
 use App\Models\Customer;
-use Orchid\Screen\Field;
 use Orchid\Screen\Fields\Select;
-
 
 class CustomerFilter extends Filter
 {
     /**
      * @return string
      */
+    public $parameters = ['fullname'];
 
-    public $parameters = ['email'];
-
-    public function email(): string
+    public function fullname(): string
     {
-        return 'Email';
+        return 'Fullname';
     }
 
     /**
-     * The array of matched parameters.
-     *
-     * @return array|null
-     */
-    
-
-    /**
      * @param Builder $builder
-     *
      * @return Builder
      */
     public function run(Builder $builder): Builder
     {
-        return $builder->where('email', $this->request->get('email'));
+        $selectedFullName = $this->request->get('fullname');
+
+        // Split the full name into first name and last name
+        [$firstName, $lastName] = explode(' ', $selectedFullName, 2);
+
+        // Query the database to find the customer with the matching first name and last name
+        return $builder->where('firstname', $firstName)->where('lastname', $lastName);
     }
 
     /**
-     * @return Field[]
+     * @return array
      */
     public function display(): array
     {
+        $customers = Customer::all();
+        $customerOptions = [];
+
+        foreach ($customers as $customer) {
+            $fullName = "{$customer->firstname} {$customer->lastname}";
+            $customerOptions[$fullName] = $fullName;
+        }
+
         return [
-            Select::make('email')
-                ->fromModel(Customer::class, 'email', 'email')
+            Select::make('fullname')
+                ->options($customerOptions)
                 ->empty()
-                ->value($this->request->get('email'))
-                ->title(__('Email')),
+                ->value($this->request->get('fullname'))
+                ->title(__('Fullname')),
         ];
     }
 
@@ -60,6 +63,7 @@ class CustomerFilter extends Filter
      */
     public function value(): string
     {
-        return $this->email(). ': '.Customer::where('email', $this->request->get('email'))->first()->email;
+        $selectedFullName = $this->request->get('fullname');
+        return $this->fullname() . ': ' . $selectedFullName;
     }
 }

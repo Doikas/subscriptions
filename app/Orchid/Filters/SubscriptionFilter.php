@@ -6,62 +6,107 @@ namespace App\Orchid\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
 use Orchid\Filters\Filter;
-use App\Models\Subscription;
-use Orchid\Screen\Field;
-use Orchid\Screen\Fields\Select;
 use App\Models\Customer;
-use App\Models\Service;
-
+use App\Models\Subscription;
+use Orchid\Screen\Fields\Select;
+use Orchid\Screen\Fields\Input;
 
 class SubscriptionFilter extends Filter
 {
-    /**
-     * @return string
-     */
+    public $parameters = ['customer', 'domain']; // Add 'domain' parameter
 
-    public $parameters = ['email'];
-
-    public function email(): string
+    public function customer(): string
     {
-        return 'Email';
+        return 'Customer';
     }
 
-    /**
-     * The array of matched parameters.
-     *
-     * @return array|null
-     */
-    
+    public function domain(): string // Define a title for the domain filter
+    {
+        return 'Domain';
+    }
 
-    /**
-     * @param Builder $builder
-     *
-     * @return Builder
-     */
     public function run(Builder $builder): Builder
-    {
-        return $builder->where('customer_id', $this->request->get('email'));
+{
+    $customerFilter = $this->request->get('customer');
+    $domainFilter = $this->request->get('domain');
+
+    if (!empty($customerFilter)) {
+        $builder = $builder->where('customer_id', $customerFilter);
     }
 
-    /**
-     * @return Field[]
-     */
-    public function display(): array
-    {
-        return [
-            Select::make('email')
-                ->fromModel(Customer::class, 'email', 'id')
-                ->empty()
-                ->value($this->request->get('email'))
-                ->title(__('Email')),
-        ];
+    if (!empty($domainFilter)) {
+        $builder = $builder->where('domain', $domainFilter);
     }
 
-    /**
-     * @return string
-     */
-    public function value(): string
-    {
-        return $this->email(). ': '.Customer::where('id', $this->request->get('email'))->first()->email;
+    return $builder;
+}
+
+public function display(): array
+{
+    $customers = Customer::all();
+    $customerOptions = [];
+
+    foreach ($customers as $customer) {
+        $customerOptions[$customer->id] = "{$customer->firstname} {$customer->lastname}";
     }
+
+    $domainOptions = [];
+
+    if (!$this->request->filled('customer')) {
+        // If no customer is selected, fetch all domains
+        $allDomains = Subscription::pluck('domain')->unique();
+        foreach ($allDomains as $domain) {
+            $domainOptions[$domain] = $domain;
+        }
+    } elseif ($this->request->filled('customer')) {
+        // If a customer is selected, fetch only the domains related to that customer
+        $selectedCustomerId = $this->request->get('customer');
+        $selectedCustomerDomains = Subscription::where('customer_id', $selectedCustomerId)
+            ->pluck('domain')->unique();
+
+        foreach ($selectedCustomerDomains as $domain) {
+            $domainOptions[$domain] = $domain;
+        }
+    }
+
+    return [
+        Select::make('customer')
+            ->options($customerOptions)
+            ->empty()
+            ->value($this->request->get('customer'))
+            ->title(__('Customer')),
+        
+        Select::make('domain')
+            ->options($domainOptions)
+            ->empty()
+            ->value($this->request->get('domain'))
+            ->title(__('Domain')),
+    ];
+}
+
+
+
+public function value(): string
+{
+    $selectedCustomerId = $this->request->get('customer');
+    $selectedDomain = $this->request->get('domain');
+    
+    $customer = Customer::where('id', $selectedCustomerId)->first();
+    $fullName = $customer ? "{$customer->firstname} {$customer->lastname}" : '';
+    $email = $customer ? $customer->email : '';
+    
+    $value = $this->customer() . ': ' . $fullName;
+
+    if ($selectedDomain) {
+        $value .= ', Domain: ' . $selectedDomain;
+    }
+
+    if ($email) {
+        $value .= ', Email: ' . $email;
+    }
+
+    return $value;
+}
+
+
 }

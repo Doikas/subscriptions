@@ -44,7 +44,7 @@ class Customer extends Model
     ];
     public function getFullnameAttribute()
     {
-        return "{$this->firstname} {$this->lastname}";
+        return $this->attributes['firstname'] . ' ' . $this->attributes['lastname'];
     }
     
 

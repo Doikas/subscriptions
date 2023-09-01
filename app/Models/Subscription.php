@@ -33,6 +33,7 @@ class Subscription extends Model
         'customer_id',
         'service_id',
         'customer.email',
+        'customer.lastname',
         'domain',
         'price',
         'paid_status',
@@ -42,6 +43,11 @@ class Subscription extends Model
     ];
     protected $allowedSorts = [
         'id',
+        'service.name',
+        'service_id',
+        'customer_id',
+        'customer.fullname',
+        'customer.email',
         'domain',
         'price',
         'paid_status',

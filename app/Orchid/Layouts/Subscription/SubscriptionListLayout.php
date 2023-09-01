@@ -40,8 +40,8 @@ class SubscriptionListLayout extends Table
                 ->cantHide(),
 
             TD::make('customer.fullname', __('Customer Name'))
-                ->cantHide()
-                ->sort(),
+                ->sort()
+                ->cantHide(),
 
             TD::make('customer.email', __('Customer Email'))
                 ->sort()

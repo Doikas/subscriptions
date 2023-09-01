@@ -17,6 +17,7 @@ use App\Models\Service;
 use App\Models\Customer;
 use App\Models\Subscription;
 
+
 class SubscriptionEditLayout extends Rows
 {
     /**
@@ -34,7 +35,13 @@ class SubscriptionEditLayout extends Rows
         $currentDate = Carbon::now('Europe/Athens');
         $defaultDate = $currentDate->add(1, 'year');
         // $defaultDate = $currentDate->add($yearexpired, 'year');
-        
+        $customers = Customer::all();
+    $customerOptions = [];
+
+    foreach ($customers as $customer) {
+        $customerOptions[$customer->id] = "{$customer->firstname} {$customer->lastname}";
+    }
+
         
         return [
             Relation::make('subscription.service_id')

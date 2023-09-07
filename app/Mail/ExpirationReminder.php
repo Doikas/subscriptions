@@ -20,68 +20,70 @@
  *
  */
 
-namespace App\Mail;
+ namespace App\Mail;
 
-use App\Models\Subscription;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Mail\Mailable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
+ use App\Models\Subscription;
+ use Illuminate\Bus\Queueable;
+ use Illuminate\Contracts\Queue\ShouldQueue;
+ use Illuminate\Mail\Mailable;
+ use Illuminate\Queue\SerializesModels;
+ use Illuminate\Mail\Mailables\Content;
+ use Illuminate\Mail\Mailables\Envelope;
+ use Illuminate\Support\Facades\Log;
+ 
+ class ExpirationReminder extends Mailable
+ {
+     use Queueable, SerializesModels;
+     public $data;
+ 
+     // Remove the duplicated declaration of $data from here
+     // public $data;
+ 
+     /**
+      * Create a new message instance.
+      *
+      * @return void
+      */
+     public function __construct($data)
+     {
+        $this->data = $data;
+     }
+ 
+     /**
+      * Build the message.
+      *
+      * @return $this
+      */
+     public function envelope()
+     {
+         return new Envelope(
+             subject: 'Service Expiration Reminder',
+         );
+     }
+ 
+     public function content()
+     {
+        Log::channel('custom')->info('Data received:', $this->data);
 
-class ExpirationReminder extends Mailable
-{
-    use Queueable, SerializesModels;
-
-    public $subscription;
-    public $options;
-
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
-    public function __construct(private $data)
-    {
-        
-    }
-
-    /**
-     * Build the message.
-     *
-     * @return $this
-     */
-    public function envelope()
-    {
-        return new Envelope(
-            subject: 'Service Expiration Reminder',
-        );
-    }
-
-    public function content()
-    {
-        //dd($this->data);
-        return new Content(
-
-            view: 'email.expiration_reminder',
-            with: [
-                'customer.pronunciation' => $this->data['customer_pronunciation'],
-                'service.name' => $this->data['service_name'],
-                'expired_date' => $this->data['expired_date'],
-            ],
-            
-        );
-    }
-
-    public function attachments()
-    {
-        return [];
-    }
-    // public function build()
-    // {
-    //     return $this->view('email.expiration_reminder');
-    // }
-
-
-}
+         //dd($this->data);
+         return new Content(
+ 
+             view: 'email.expiration_reminder',
+             with: [
+                 'customer_pronunciation' => $this->data['customer.pronunciation'],
+                 'service_name' => $this->data['service.name'],
+                 'expired_date' => $this->data['expired_date'],
+             ],
+             
+         );
+     }
+ 
+     public function attachments()
+     {
+         return [];
+     }
+     // public function build()
+     // {
+     //     return $this->view('email.expiration_reminder');
+     // }
+ }

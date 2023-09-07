@@ -17,80 +17,56 @@ class SubscriptionExpirationReminder extends Command
      *
      * @var string
      */
-    protected $signature = 'auto:SubscriptionExpirationReminder';
+    protected $signature = 'auto:subscription-expiration-reminder';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Send expiration reminders for subscriptions';
+
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
     /**
      * Execute the console command.
      *
-     * @return int
+     * @return void
      */
-
-     public function __construct()
-    {
-        parent::__construct();
-    }  
     public function handle()
     {
-        
-        $subscription = Subscription::joinRelationship('customers','services')->get();
+        $subscriptions = Subscription::with('customer', 'service')->get();
+        $present = Carbon::now('Europe/Athens');
 
-        foreach($subscription as $sub){
-            $present = Carbon::now('Europe/Athens');
-            $plupres = $present->add(30, 'day');
+        foreach ($subscriptions as $subscription) {
+            $expiredDate = Carbon::parse($subscription->expired_date);
+            $daysUntilExpiration = $present->diffInDays($expiredDate);
 
-            if ($sub->expired_date == $plupres)
-            {
-                //var_dump($s);
-                echo "30 days expiration";  
+            if ($daysUntilExpiration === 30) {
                 $data = [
-                    'customer.email' => $sub->customer_email,
-                    'customer.pronunciation' => $sub->customer_pronunciation,
-                    'service.name'=>$sub->service_name,
-                    'expired_date'=> $sub->expired_date
+                    'customer.email' => $subscription->customer->email,
+                    'customer.pronunciation' => $subscription->customer->pronunciation,
+                    'service.name' => $subscription->service->name,
+                    'expired_date' => $subscription->expired_date,
                 ];
-                Mail::to($sub->customer_email)->send(new ExpirationReminder($data));
-
-
-            }elseif ($sub->expired_date == $plupres){
-                echo "15 days expiration";
+                Mail::to($subscription->customer->email)->send(new ExpirationReminder($data));
+            } elseif ($daysUntilExpiration === 15 || $daysUntilExpiration === 5 || $daysUntilExpiration === 0) {
                 $data = [
-                    'customer.email' => $sub->customer_email,
-                    'customer.pronunciation' => $sub->customer_pronunciation,
-                    'service.name'=>$sub->service_name,
-                    'expired_date'=> $sub->expired_date
+                    'customer.email' => $subscription->customer->email,
+                    'customer.pronunciation' => $subscription->customer->pronunciation,
+                    'service.name' => $subscription->service->name,
+                    'expired_date' => $subscription->expired_date,
                 ];
-                Mail::to($sub->customer_email)->send(new ExpirationReminder($data));
-            }elseif ($sub->expiration == $plupres){
-                echo "5 days expiration";
-                $data = [
-                    'customer.email' => $sub->customer_email,
-                    'customer.pronunciation' => $sub->customer_pronunciation,
-                    'service.name'=>$sub->service_name,
-                    'expired_date'=> $sub->expired_date
-                ];
-                Mail::to($sub->customer_email)->send(new ExpirationReminder($data));
-            }elseif ($sub->expiration == $plupres){
-                echo "today expiration";
-                $data = [
-                    'customer.email' => $sub->customer_email,
-                    'customer.pronunciation' => $sub->customer_pronunciation,
-                    'service.name'=>$sub->service_name,
-                    'expired_date'=> $sub->expired_date
-                ];
-                Mail::to($sub->customer_email)->send(new ExpirationReminder($data));
+                Mail::to($subscription->customer->email)->send(new ExpirationReminder($data));
             }
-
         }
-        //var_dump($services);
-
-       echo date("Y-m-d", strtotime("-30 days")) ;
-       //2022-12-25
     }
 }

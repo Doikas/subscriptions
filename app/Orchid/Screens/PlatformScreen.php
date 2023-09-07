@@ -71,14 +71,19 @@ class PlatformScreen extends Screen
      * @return \Orchid\Screen\Layout[]
      */
     public function query(): iterable
-    {
-        $present = Carbon::now('Europe/Athens');
-        $plupres = $present->add(30, 'day');
-        return [
-            
-            'subscriptions' => Subscription::with('customer','service')->where('expired_date', '<', $plupres)->filters(SubscriptionFiltersLayout::class)->defaultSort('expired_date', 'asc')->paginate(),
-        ];
-    }
+{
+    $present = Carbon::now('Europe/Athens');
+    $future = $present->copy()->add(30, 'day'); // 30 days from now
+    
+    return [
+        'subscriptions' => Subscription::with('customer', 'service')
+            ->whereBetween('expired_date', [$present, $future])
+            ->filters(SubscriptionFiltersLayout::class)
+            ->defaultSort('expired_date', 'asc')
+            ->paginate(),
+    ];
+}
+
 
     /**
      * The name of the screen displayed in the header.

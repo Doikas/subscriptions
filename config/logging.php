@@ -117,6 +117,13 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+
+        'custom' => [
+            'driver' => 'daily', // You can use the 'daily' driver as an example.
+            'path' => storage_path('logs/custom.log'), // Define the log file path.
+            'level' => 'info', // Define the log level.
+            'days' => 14, // Retention period (optional).
+        ],
     ],
 
 ];

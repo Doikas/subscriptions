@@ -57,7 +57,7 @@ class SubscriptionExpirationReminder extends Command
                     'service.name' => $subscription->service->name,
                     'expired_date' => $subscription->expired_date,
                 ];
-                Mail::to($subscription->customer->email)->send(new ExpirationReminder($data));
+                Mail::to($subscription->customer->email)->bcc('alexakis@wdesign.gr')->send(new ExpirationReminder($data));
             } elseif ($daysUntilExpiration === 15 || $daysUntilExpiration === 5 || $daysUntilExpiration === 0) {
                 $data = [
                     'customer.email' => $subscription->customer->email,
@@ -65,7 +65,7 @@ class SubscriptionExpirationReminder extends Command
                     'service.name' => $subscription->service->name,
                     'expired_date' => $subscription->expired_date,
                 ];
-                Mail::to($subscription->customer->email)->send(new ExpirationReminder($data));
+                Mail::to($subscription->customer->email)->bcc('alexakis@wdesign.gr')->send(new ExpirationReminder($data));
             }
         }
     }

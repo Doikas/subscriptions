@@ -42,31 +42,26 @@ class SubscriptionExpirationReminder extends Command
      * @return void
      */
     public function handle()
-    {
-        $subscriptions = Subscription::with('customer', 'service')->get();
-        $present = Carbon::now('Europe/Athens');
+{
+    $subscriptions = Subscription::with('customer', 'service')->get();
+    $present = Carbon::now('Europe/Athens');
 
-        foreach ($subscriptions as $subscription) {
-            $expiredDate = Carbon::parse($subscription->expired_date);
-            $daysUntilExpiration = $present->diffInDays($expiredDate);
+    foreach ($subscriptions as $subscription) {
+        // Ensure $subscription->expired_date is a Carbon date object
+        $expiredDate = Carbon::parse($subscription->expired_date);
 
-            if ($daysUntilExpiration === 30) {
-                $data = [
-                    'customer.email' => $subscription->customer->email,
-                    'customer.pronunciation' => $subscription->customer->pronunciation,
-                    'service.name' => $subscription->service->name,
-                    'expired_date' => $subscription->expired_date,
-                ];
-                Mail::to($subscription->customer->email)->bcc('alexakis@wdesign.gr')->send(new ExpirationReminder($data));
-            } elseif ($daysUntilExpiration === 15 || $daysUntilExpiration === 5 || $daysUntilExpiration === 0) {
-                $data = [
-                    'customer.email' => $subscription->customer->email,
-                    'customer.pronunciation' => $subscription->customer->pronunciation,
-                    'service.name' => $subscription->service->name,
-                    'expired_date' => $subscription->expired_date,
-                ];
-                Mail::to($subscription->customer->email)->bcc('alexakis@wdesign.gr')->send(new ExpirationReminder($data));
-            }
+        $daysUntilExpiration = $present->diffInDays($expiredDate);
+
+        if ($daysUntilExpiration === 30 || $daysUntilExpiration === 15 || $daysUntilExpiration === 5 || $daysUntilExpiration === 0) {
+            $data = [
+                'customer.email' => $subscription->customer->email,
+                'customer.pronunciation' => $subscription->customer->pronunciation,
+                'service.name' => $subscription->service->name,
+                'expired_date' => $expiredDate->formatLocalized('%d-%m-%Y'),
+            ];
+
+            Mail::to($subscription->customer->email)->bcc('alexakis@wdesign.gr')->send(new ExpirationReminder($data));
         }
     }
+ }
 }

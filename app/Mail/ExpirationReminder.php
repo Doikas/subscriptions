@@ -72,7 +72,7 @@
              with: [
                  'customer_pronunciation' => $this->data['customer.pronunciation'],
                  'service_name' => $this->data['service.name'],
-                 'expired_date' => $this->data['expired_date']->format('d-m-y'),
+                 'expired_date' => $this->data['expired_date'],
              ],
              
          );

@@ -19,7 +19,7 @@
                     <tr>
                         <td bgcolor="#ffffff" style="padding: 20px;">
                             <p>Dear {{ $customer_pronunciation }},</p>
-                            <p>Your service for {{ $service_name }} is set to expire on {{ $expired_date }}.</p>
+                            <p>Your service {{ $service_name }} for the {{ $domain }} is set to expire on {{ $expired_date }}.</p>
                             <p>Please contact us for payment details to renew your service.</p>
                         </td>
                     </tr>

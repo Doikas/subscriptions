@@ -57,6 +57,7 @@ class SubscriptionExpirationReminder extends Command
                 'customer.email' => $subscription->customer->email,
                 'customer.pronunciation' => $subscription->customer->pronunciation,
                 'service.name' => $subscription->service->name,
+                'domain' => $subscription->domain,
                 'expired_date' => $expiredDate->formatLocalized('%d-%m-%Y'),
             ];
 

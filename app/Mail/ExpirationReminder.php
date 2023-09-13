@@ -72,6 +72,7 @@
              with: [
                  'customer_pronunciation' => $this->data['customer.pronunciation'],
                  'service_name' => $this->data['service.name'],
+                 'domain' => $this->data['domain'],
                  'expired_date' => $this->data['expired_date'],
              ],
              

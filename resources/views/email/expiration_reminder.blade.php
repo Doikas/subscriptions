@@ -12,7 +12,7 @@
                 <table width="600" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse;">
                     <tr>
                         <td align="center" bgcolor="#f5f5f5" style="padding: 40px 0;">
-                            <img src="images/WDesign logo.png" alt="wdesignLogo" style="max-width: 150px;">
+                            <img src="images/WDesign%20logo.png" alt="wdesignLogo" style="max-width: 150px;">
                             <h1 style="color: #333333;">Service Expiration Reminder</h1>
                         </td>
                     </tr>

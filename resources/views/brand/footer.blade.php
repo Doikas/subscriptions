@@ -4,3 +4,4 @@
         {{ config('app.name') }}
     </a>
 </p>
+<script src="/app.js"></script>

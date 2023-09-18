@@ -30,10 +30,19 @@ class SubscriptionEditLayout extends Rows
     public function fields(): array
     {
 
+        $selectedServiceId = $this->query->get('subscription.service_id');
+        $selectedService = Service::find($selectedServiceId);
+        $serviceExpiration = optional($selectedService)->expiration;
+
+        // Calculate the default date based on service expiration
+        $defaultDate = $serviceExpiration
+            ? Carbon::now('Europe/Athens')->addYear($serviceExpiration)
+            : Carbon::now('Europe/Athens')->addYear(); // Default to 1 year if no service selected
+
         // $yearexpired = 'service.expiration';
         $toda = Carbon::now('Europe/Athens');
         $currentDate = Carbon::now('Europe/Athens');
-        $defaultDate = $currentDate->add(1, 'year');
+        //$defaultDate = $currentDate->add(1, 'year');
         // $defaultDate = $currentDate->add($yearexpired, 'year');
         $customers = Customer::all();
     $customerOptions = [];
@@ -46,7 +55,8 @@ class SubscriptionEditLayout extends Rows
         return [
             Relation::make('subscription.service_id')
                 ->fromModel(Service::class, 'name', 'id')
-                ->title(__('Service')),
+                ->title(__('Service'))
+                ->id('custom-service-field'),
 
             Relation::make('subscription.customer_id')
                 ->fromModel(Customer::class, 'fullname', 'id')
@@ -77,7 +87,8 @@ class SubscriptionEditLayout extends Rows
                     ->title('Expired Date')
                     ->value($defaultDate)
                     ->allowInput()
-                    ->enableTime(),
+                    ->enableTime()
+                    ->id('custom-date-field'),
 
             Input::make('subscription.notes')
                 ->type('text')

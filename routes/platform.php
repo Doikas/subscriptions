@@ -23,6 +23,7 @@ use App\Orchid\Screens\Services\ServiceListScreen;
 use App\Orchid\Screens\Services\ServiceEditScreen;
 use App\Orchid\Screens\Subscriptions\SubscriptionListScreen;
 use App\Orchid\Screens\Subscriptions\SubscriptionEditScreen;
+use App\Http\Controllers\ServiceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -165,3 +166,6 @@ Route::screen('subscriptions/create', SubscriptionEditScreen::class)
 ->breadcrumbs(fn (Trail $trail) => $trail
     ->parent('platform.systems.subscriptions')
     ->push(__('Create'), route('platform.systems.subscriptions.create')));
+
+Route::get('subscriptions/get-expiration/{serviceId}', [ServiceController::class, 'getExpiration'])
+    ->name('platform.service.getExpiration');

@@ -13,100 +13,122 @@ use Orchid\Screen\Fields\Input;
 
 class SubscriptionFilter extends Filter
 {
-    public $parameters = ['customer', 'domain']; // Add 'domain' parameter
+    public $parameters = ['customer', 'domain', 'email'];
 
     public function customer(): string
     {
         return 'Customer';
     }
 
-    public function domain(): string // Define a title for the domain filter
+    public function domain(): string
     {
         return 'Domain';
+    }
+
+    public function email(): string
+    {
+        return 'Email';
     }
 
     public function run(Builder $builder): Builder
 {
     $customerFilter = $this->request->get('customer');
     $domainFilter = $this->request->get('domain');
+    $emailFilter = $this->request->get('email');
 
-    if (!empty($customerFilter)) {
-        $builder = $builder->where('customer_id', $customerFilter);
+    // Join the Customer table to access the email field
+    $builder = $builder->join('customers', 'subscriptions.customer_id', '=', 'customers.id');
+
+    // Start with a base query that always includes the customer filter
+    $builder = $builder->where('customers.id', $customerFilter);
+
+    // Add conditions for domain and email filters using "orWhere" to allow for multiple filters
+    if (!empty($domainFilter)) {
+        $builder = $builder->orWhere('subscriptions.domain', $domainFilter);
     }
 
-    if (!empty($domainFilter)) {
-        $builder = $builder->where('domain', $domainFilter);
+    if (!empty($emailFilter)) {
+        $builder = $builder->orWhere('customers.email', $emailFilter);
     }
 
     return $builder;
 }
 
-public function display(): array
-{
-    $customers = Customer::all();
-    $customerOptions = [];
 
-    foreach ($customers as $customer) {
-        $customerOptions[$customer->id] = "{$customer->firstname} {$customer->lastname}";
-    }
+    public function display(): array
+    {
+        $customers = Customer::all();
+        $customerOptions = [];
 
-    $domainOptions = [];
+        foreach ($customers as $customer) {
+            $customerOptions[$customer->id] = "{$customer->firstname} {$customer->lastname}";
+        }
 
-    if (!$this->request->filled('customer')) {
-        // If no customer is selected, fetch all domains
         $allDomains = Subscription::pluck('domain')->unique();
-        foreach ($allDomains as $domain) {
-            $domainOptions[$domain] = $domain;
-        }
-    } elseif ($this->request->filled('customer')) {
-        // If a customer is selected, fetch only the domains related to that customer
-        $selectedCustomerId = $this->request->get('customer');
-        $selectedCustomerDomains = Subscription::where('customer_id', $selectedCustomerId)
-            ->pluck('domain')->unique();
+        $domainOptions = $allDomains->mapWithKeys(function ($domain) {
+            return [$domain => $domain];
+        });
 
-        foreach ($selectedCustomerDomains as $domain) {
-            $domainOptions[$domain] = $domain;
-        }
+        $allEmails = Customer::pluck('email')->unique();
+        $emailOptions = $allEmails->mapWithKeys(function ($email) {
+            return [$email => $email];
+        });
+
+        return [
+            Select::make('customer')
+                ->options($customerOptions)
+                ->empty()
+                ->value($this->request->get('customer'))
+                ->title(__('Customer')),
+            
+            Select::make('domain')
+                ->options($domainOptions)
+                ->empty()
+                ->value($this->request->get('domain'))
+                ->title(__('Domain')),
+            
+            Select::make('email')
+                ->options($emailOptions)
+                ->empty()
+                ->value($this->request->get('email'))
+                ->title(__('Email')),
+        ];
     }
 
-    return [
-        Select::make('customer')
-            ->options($customerOptions)
-            ->empty()
-            ->value($this->request->get('customer'))
-            ->title(__('Customer')),
-        
-        Select::make('domain')
-            ->options($domainOptions)
-            ->empty()
-            ->value($this->request->get('domain'))
-            ->title(__('Domain')),
-    ];
-}
-
-
-
-public function value(): string
+    public function value(): string
 {
     $selectedCustomerId = $this->request->get('customer');
     $selectedDomain = $this->request->get('domain');
+    $selectedEmail = $this->request->get('email');
     
-    $customer = Customer::where('id', $selectedCustomerId)->first();
+    $customer = Customer::find($selectedCustomerId);
     $fullName = $customer ? "{$customer->firstname} {$customer->lastname}" : '';
-    $email = $customer ? $customer->email : '';
     
-    $value = $this->customer() . ': ' . $fullName;
+    $email = $selectedEmail; // Email doesn't require a database lookup.
+    
+    $value = '';
 
-    if ($selectedDomain) {
-        $value .= ', Domain: ' . $selectedDomain;
+    if ($customer) {
+        // Only include customer information if neither domain nor email is selected.
+        $value .= $this->customer() . ': ' . $fullName;
     }
 
-    if ($email) {
-        $value .= ', Email: ' . $email;
+    if ($selectedDomain) {
+        if (!empty($value)) {
+            $value .= ', ';
+        }
+        $value .= 'Domain: ' . $selectedDomain;
+    }
+
+    if ($selectedEmail) {
+        if (!empty($value)) {
+            $value .= ', ';
+        }
+        $value .= 'Email: ' . $email;
     }
 
     return $value;
 }
 
-
 }
+

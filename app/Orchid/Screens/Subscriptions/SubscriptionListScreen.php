@@ -15,6 +15,7 @@ use App\Models\Subscription;
 use App\Models\Customer;
 use App\Models\Service;
 use GuzzleHttp\Psr7\Query;
+use Orchid\Screen\TD;
 
 class SubscriptionListScreen extends Screen
 {
@@ -27,7 +28,10 @@ class SubscriptionListScreen extends Screen
     {
         return [
             
-            'subscriptions' => Subscription::with('customer','service')->filters(SubscriptionFiltersLayout::class)->defaultSort('expired_date', 'asc')->paginate(),
+            'subscriptions' => Subscription::with('customer','service')
+                ->filters(SubscriptionFiltersLayout::class)
+                ->defaultSort('expired_date', 'asc')
+                ->paginate(),
         ];
     }
 
@@ -73,6 +77,7 @@ class SubscriptionListScreen extends Screen
 
             Layout::modal('asyncEditSubscriptionModal', SubscriptionEditLayout::class)
                 ->async('asyncGetSubscription'),
+            
         ];
     }
 

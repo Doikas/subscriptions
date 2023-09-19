@@ -11,34 +11,35 @@ use Orchid\Screen\Fields\Select;
 
 class CustomerFilter extends Filter
 {
-    /**
-     * @return string
-     */
-    public $parameters = ['fullname'];
+    public $parameters = ['fullname', 'email'];
 
     public function fullname(): string
     {
         return 'Fullname';
     }
 
-    /**
-     * @param Builder $builder
-     * @return Builder
-     */
+    public function email(): string
+    {
+        return 'Email';
+    }
+
     public function run(Builder $builder): Builder
     {
         $selectedFullName = $this->request->get('fullname');
+        $emailFilter = $this->request->get('email');
 
-        // Split the full name into first name and last name
-        [$firstName, $lastName] = explode(' ', $selectedFullName, 2);
+        if ($selectedFullName) {
+            [$firstName, $lastName] = explode(' ', $selectedFullName, 2);
+            $builder->where('firstname', $firstName)->where('lastname', $lastName);
+        }
 
-        // Query the database to find the customer with the matching first name and last name
-        return $builder->where('firstname', $firstName)->where('lastname', $lastName);
+        if (!empty($emailFilter)) {
+            $builder->orWhere('email', $emailFilter);
+        }
+
+        return $builder;
     }
 
-    /**
-     * @return array
-     */
     public function display(): array
     {
         $customers = Customer::all();
@@ -49,21 +50,45 @@ class CustomerFilter extends Filter
             $customerOptions[$fullName] = $fullName;
         }
 
+        $allEmails = Customer::pluck('email')->unique();
+        $emailOptions = $allEmails->mapWithKeys(function ($email) {
+            return [$email => $email];
+        });
+
         return [
             Select::make('fullname')
                 ->options($customerOptions)
                 ->empty()
                 ->value($this->request->get('fullname'))
                 ->title(__('Fullname')),
+
+            Select::make('email')
+                ->options($emailOptions)
+                ->empty()
+                ->value($this->request->get('email'))
+                ->title(__('Email')),
         ];
     }
 
-    /**
-     * @return string
-     */
     public function value(): string
     {
         $selectedFullName = $this->request->get('fullname');
-        return $this->fullname() . ': ' . $selectedFullName;
+        $selectedEmail = $this->request->get('email');
+        $value = '';
+
+        if ($selectedFullName) {
+            $value .= 'Customer: ' . $selectedFullName;
+        }
+
+        if ($selectedEmail) {
+            if ($value) {
+                $value .= ', ';
+            }
+            $value .= 'Email: ' . $selectedEmail;
+        }
+
+        return $value;
     }
 }
+
+

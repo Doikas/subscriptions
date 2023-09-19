@@ -9,6 +9,7 @@ use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\DropDown;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Actions\ModalToggle;
+use Orchid\Screen\Fields\Group;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Layouts\Persona;
 use Orchid\Screen\Layouts\Table;
@@ -29,18 +30,15 @@ class CustomerListLayout extends Table
         return [
             TD::make('firstname', __('First Name'))
                 ->sort()
-                ->cantHide()
-                ->filter(Input::make()),
+                ->cantHide(),
 
             TD::make('lastname', __('Last Name'))
                 ->sort()
-                ->cantHide()
-                ->filter(Input::make()),
+                ->cantHide(),
 
             TD::make('email', __('Email'))
                 ->sort()
                 ->cantHide()
-                ->filter(Input::make())
                 ->render(fn (Customer $customer) => ModalToggle::make($customer->email)
                     ->modal('asyncEditCustomerModal')
                     ->modalTitle($customer->firstname." ".$customer->lastname)
@@ -51,17 +49,14 @@ class CustomerListLayout extends Table
 
             TD::make('website', __('Website'))
                     ->sort()
-                    ->cantHide()
-                    ->filter(Input::make()),
+                    ->cantHide(),
                     
             TD::make('pronunciation', __('Pronunciation'))
                     ->sort()
-                    ->cantHide()
-                    ->filter(Input::make()),     
+                    ->cantHide(),     
 
             TD::make('phone', __('Phone'))
-                    ->sort()
-                    ->filter(Input::make()),
+                    ->sort(),
 
             TD::make('notes', __('Notes')),
                     
@@ -73,9 +68,7 @@ class CustomerListLayout extends Table
             TD::make(__('Actions'))
                 ->align(TD::ALIGN_CENTER)
                 ->width('100px')
-                ->render(fn (Customer $customer) => DropDown::make()
-                    ->icon('options-vertical')
-                    ->list([
+                ->render(fn (Customer $customer) => Group::make([
 
                         Link::make(__('Edit'))
                             ->route('platform.systems.customers.edit', $customer->id)

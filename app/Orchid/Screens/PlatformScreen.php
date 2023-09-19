@@ -78,6 +78,7 @@ class PlatformScreen extends Screen
     return [
         'subscriptions' => Subscription::with('customer', 'service')
             ->whereBetween('expired_date', [$present, $future])
+            ->orWhere('expired_date', '<', $present)
             ->filters(SubscriptionFiltersLayout::class)
             ->defaultSort('expired_date', 'asc')
             ->paginate(),

@@ -9,6 +9,7 @@ use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\DropDown;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Actions\ModalToggle;
+use Orchid\Screen\Fields\Group;
 use Orchid\Screen\Fields\DateTimer;
 use Orchid\Screen\Fields\CheckBox;
 use Orchid\Screen\Fields\Relation;
@@ -49,13 +50,11 @@ class SubscriptionListLayout extends Table
 
             TD::make('domain', __('Domain'))
                 ->sort()
-                ->cantHide()
-                ->filter(Input::make()),
+                ->cantHide(),
 
             TD::make('price', __('Price'))
                     ->sort()
-                    ->cantHide()
-                    ->filter(Input::make()),
+                    ->cantHide(),
 
             // TD::make('paid_status', __('Paid Status'))
             // ->render(function ($checkbox){
@@ -66,18 +65,14 @@ class SubscriptionListLayout extends Table
 
             TD::make('start_date', __('Start Date'))
                     ->sort()
-                    ->cantHide()
-                    ->filter(DateTimer::make()),
+                    ->cantHide(),
 
             TD::make('expired_date', __('Expired Date'))
                     ->sort()
-                    ->cantHide()
-                    ->filter(DateTimer::make()),
+                    ->cantHide(),
 
             TD::make('notes', __('Notes'))
-                    ->sort()
-                    ->cantHide()
-                    ->filter(Input::make()),
+                    ->cantHide(),
                     
 
             // TD::make('updated_at', __('Last edit'))
@@ -87,9 +82,7 @@ class SubscriptionListLayout extends Table
             TD::make(__('Actions'))
                 ->align(TD::ALIGN_CENTER)
                 ->width('100px')
-                ->render(fn (Subscription $subscription) => DropDown::make()
-                    ->icon('options-vertical')
-                    ->list([
+                ->render(fn (Subscription $subscription) => Group::make([
 
                         Link::make(__('Edit'))
                             ->route('platform.systems.subscriptions.edit', $subscription->id)

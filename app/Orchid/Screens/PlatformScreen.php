@@ -7,6 +7,9 @@ namespace App\Orchid\Screens;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;
 use Orchid\Support\Facades\Layout;
+use App\Orchid\Layouts\Subscription\SubscriptionFiltersLayoutEmail;
+use App\Orchid\Layouts\Subscription\SubscriptionFiltersLayoutFullname;
+use App\Orchid\Layouts\Subscription\SubscriptionFiltersLayoutServiceName;
 use App\Orchid\Layouts\Subscription\SubscriptionFiltersLayout;
 use App\Orchid\Layouts\Subscription\SubscriptionEditLayout;
 use App\Orchid\Layouts\Subscription\SubscriptionListLayout;
@@ -80,6 +83,9 @@ class PlatformScreen extends Screen
             ->whereBetween('expired_date', [$present, $future])
             ->orWhere('expired_date', '<', $present)
             ->filters(SubscriptionFiltersLayout::class)
+            ->filters(SubscriptionFiltersLayoutEmail::class)
+            ->filters(SubscriptionFiltersLayoutFullname::class)
+            ->filters(SubscriptionFiltersLayoutServiceName::class)
             ->defaultSort('expired_date', 'asc')
             ->paginate(),
     ];

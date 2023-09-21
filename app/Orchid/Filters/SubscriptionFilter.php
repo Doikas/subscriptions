@@ -131,4 +131,3 @@ class SubscriptionFilter extends Filter
 }
 
 }
-

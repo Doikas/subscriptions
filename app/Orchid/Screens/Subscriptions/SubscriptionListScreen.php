@@ -4,6 +4,9 @@ namespace App\Orchid\Screens\Subscriptions;
 
 use Orchid\Screen\Screen;
 use App\Orchid\Layouts\Subscription\SubscriptionFiltersLayout;
+use App\Orchid\Layouts\Subscription\SubscriptionFiltersLayoutEmail;
+use App\Orchid\Layouts\Subscription\SubscriptionFiltersLayoutFullname;
+use App\Orchid\Layouts\Subscription\SubscriptionFiltersLayoutServiceName;
 use App\Orchid\Layouts\Subscription\SubscriptionEditLayout;
 use App\Orchid\Layouts\Subscription\SubscriptionListLayout;
 use Illuminate\Http\Request;
@@ -16,6 +19,7 @@ use App\Models\Customer;
 use App\Models\Service;
 use GuzzleHttp\Psr7\Query;
 use Orchid\Screen\TD;
+
 
 class SubscriptionListScreen extends Screen
 {
@@ -30,6 +34,9 @@ class SubscriptionListScreen extends Screen
             
             'subscriptions' => Subscription::with('customer','service')
                 ->filters(SubscriptionFiltersLayout::class)
+                ->filters(SubscriptionFiltersLayoutEmail::class)
+                ->filters(SubscriptionFiltersLayoutFullname::class)
+                ->filters(SubscriptionFiltersLayoutServiceName::class)
                 ->defaultSort('expired_date', 'asc')
                 ->paginate(),
         ];

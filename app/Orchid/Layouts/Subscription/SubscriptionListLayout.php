@@ -37,14 +37,23 @@ class SubscriptionListLayout extends Table
     {
         return [
             TD::make('service.name', __('Service Name'))
+            ->render(function (Subscription $subscription) {
+                return $subscription->service->name;
+                })
                 ->sort()
                 ->cantHide(),
 
             TD::make('customer.fullname', __('Customer Name'))
+                ->render(function (Subscription $subscription) {
+                return $subscription->customer->fullname;
+                })
                 ->sort()
                 ->cantHide(),
 
-            TD::make('customer.email', __('Customer Email'))
+                TD::make('customer.email', __('Customer Email'))
+                ->render(function (Subscription $subscription) {
+                    return $subscription->customer->email;
+                })
                 ->sort()
                 ->cantHide(),
 

@@ -3,11 +3,13 @@
 namespace App\Orchid\Layouts\Subscription;
 
 use App\Orchid\Filters\SubscriptionFilter;
-use App\Orchid\Filters\CustomerSortEmail;
+use App\Orchid\Filters\ServiceSortName;
 use Orchid\Filters\Filter;
 use Orchid\Screen\Layouts\Selection;
+use Orchid\Screen\Layout;
+use Orchid\Screen\Fields\Input;
 
-class SubscriptionFiltersLayout extends Selection
+class SubscriptionFiltersLayoutServiceName extends Selection
 {
     /**
      * @return string[]|Filter[]
@@ -15,7 +17,8 @@ class SubscriptionFiltersLayout extends Selection
     public function filters(): array
     {
         return [
-            SubscriptionFilter::class,
+            ServiceSortName::class,
         ];
     }
+    
 }

@@ -3,7 +3,10 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Mail\ExpirationReminder;
+use App\Mail\ExpirationReminder30Days;
+use App\Mail\ExpirationReminder15Days;
+use App\Mail\ExpirationReminder5Days;
+use App\Mail\ExpirationReminder0Days;
 use App\Models\Subscription;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -52,7 +55,7 @@ class SubscriptionExpirationReminder extends Command
 
         $daysUntilExpiration = $present->diffInDays($expiredDate);
 
-        if ($daysUntilExpiration === 30 || $daysUntilExpiration === 15 || $daysUntilExpiration === 5 || $daysUntilExpiration === 0) {
+        if ($daysUntilExpiration === 30) {
             $data = [
                 'customer.email' => $subscription->customer->email,
                 'customer.pronunciation' => $subscription->customer->pronunciation,
@@ -61,7 +64,45 @@ class SubscriptionExpirationReminder extends Command
                 'expired_date' => $expiredDate->formatLocalized('%d-%m-%Y'),
             ];
 
-            Mail::to($subscription->customer->email)->bcc('alexakis@wdesign.gr')->send(new ExpirationReminder($data));
+            Mail::to($subscription->customer->email)
+            ->cc('alexakis@wdesign.gr')
+            ->send(new ExpirationReminder30Days($data));
+        }elseif ($daysUntilExpiration === 15) {
+            $data = [
+                'customer.email' => $subscription->customer->email,
+                'customer.pronunciation' => $subscription->customer->pronunciation,
+                'service.name' => $subscription->service->name,
+                'domain' => $subscription->domain,
+                'expired_date' => $expiredDate->formatLocalized('%d-%m-%Y'),
+            ];
+
+            Mail::to($subscription->customer->email)
+            ->cc('alexakis@wdesign.gr')
+            ->send(new ExpirationReminder15Days($data));
+        }elseif ($daysUntilExpiration === 5) {
+            $data = [
+                'customer.email' => $subscription->customer->email,
+                'customer.pronunciation' => $subscription->customer->pronunciation,
+                'service.name' => $subscription->service->name,
+                'domain' => $subscription->domain,
+                'expired_date' => $expiredDate->formatLocalized('%d-%m-%Y'),
+            ];
+
+            Mail::to($subscription->customer->email)
+            ->cc('alexakis@wdesign.gr')
+            ->send(new ExpirationReminder5Days($data));
+        }elseif ($daysUntilExpiration === 0) {
+            $data = [
+                'customer.email' => $subscription->customer->email,
+                'customer.pronunciation' => $subscription->customer->pronunciation,
+                'service.name' => $subscription->service->name,
+                'domain' => $subscription->domain,
+                'expired_date' => $expiredDate->formatLocalized('%d-%m-%Y'),
+            ];
+
+            Mail::to($subscription->customer->email)
+            ->cc('alexakis@wdesign.gr')
+            ->send(new ExpirationReminder0Days($data));
         }
     }
  }

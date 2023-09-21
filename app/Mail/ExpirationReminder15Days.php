@@ -31,7 +31,7 @@
  use Illuminate\Mail\Mailables\Envelope;
  use Illuminate\Support\Facades\Log;
  
- class ExpirationReminder extends Mailable
+ class ExpirationReminder15Days extends Mailable
  {
      use Queueable, SerializesModels;
      public $data;
@@ -57,7 +57,7 @@
      public function envelope()
      {
          return new Envelope(
-             subject: 'Service Expiration Reminder',
+             subject: 'Expire Soon',
          );
      }
  
@@ -68,7 +68,7 @@
          //dd($this->data);
          return new Content(
  
-             view: 'email.expiration_reminder',
+             view: 'email.expiration_reminder15days',
              with: [
                  'customer_pronunciation' => $this->data['customer.pronunciation'],
                  'service_name' => $this->data['service.name'],

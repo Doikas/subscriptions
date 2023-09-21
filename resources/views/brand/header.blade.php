@@ -1,9 +1,6 @@
 @push('head')
-    <link
-        href="/favicon.ico"
-        id="favicon"
-        rel="icon"
-    >
+    <link href="/favicon.ico" id="favicon" rel="icon">
+    <link rel="stylesheet" type="text/css" href="/app.css" >
 @endpush
 <p class="h2 n-m font-thin v-center">
     <img src="/favicon.ico" alt="">

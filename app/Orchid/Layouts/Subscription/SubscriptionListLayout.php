@@ -22,6 +22,7 @@ use App\Models\Service;
 use App\Models\Customer;
 
 
+
 class SubscriptionListLayout extends Table
 {
     /**
@@ -88,6 +89,14 @@ class SubscriptionListLayout extends Table
             //     ->sort()
             //     ->render(fn (Customer $customer) => $customer->updated_at->toDateTimeString()),
 
+            TD::make('Send Email')
+                ->align(TD::ALIGN_CENTER)
+                ->width('100px')
+                ->render(fn (Subscription $subscription) => Button::make(__('Send Status'))
+                ->icon('mail')
+                ->class('sendstatusemail')
+                ->method('sendStatusEmail', ['id' => $subscription->id])
+    ),
             TD::make(__('Actions'))
                 ->align(TD::ALIGN_CENTER)
                 ->width('100px')

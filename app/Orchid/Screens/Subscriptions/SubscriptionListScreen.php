@@ -19,6 +19,9 @@ use App\Models\Customer;
 use App\Models\Service;
 use GuzzleHttp\Psr7\Query;
 use Orchid\Screen\TD;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SubscriptionStatusNotification;
 
 
 class SubscriptionListScreen extends Screen
@@ -109,4 +112,28 @@ class SubscriptionListScreen extends Screen
 
         Toast::info(__('Subscription was removed'));
     }
+
+    public function sendStatusEmail($id)
+{
+    // Retrieve the subscription by ID
+    $subscription = Subscription::findOrFail($id);
+    $expiredDate = Carbon::parse($subscription->expired_date);
+
+    // Customize the email data here (e.g., customer's name and update message)
+    $data = [
+        'customer.email' => $subscription->customer->email,
+        'customer.pronunciation' => $subscription->customer->pronunciation,
+        'service.name' => $subscription->service->name,
+        'domain' => $subscription->domain,
+        'expired_date' => $expiredDate->formatLocalized('%d-%m-%Y'),
+    ];
+
+    // Send the service update email
+    Mail::to($subscription->customer->email)->cc('alexakis@wdesign.gr')->send(new SubscriptionStatusNotification($data));
+
+    // Optionally, you can add a success message or redirect back to the table
+    Toast::info(__('Status email sent successfully'), 'success');
+
+    return back();
+}
 }

@@ -13,7 +13,7 @@
                     <tr>
                         <td align="center" bgcolor="#f5f5f5" style="padding: 40px 0;">
                             <img src="https://subscriptions.wdesign.gr/images/WDesign%20logo.png" alt="wdesignLogo" style="max-width: 150px;">
-                            <h1 style="color: #333333;">Service Expiration Reminder 0 Days</h1>
+                            <h1 style="color: #333333;">Service Update Days</h1>
                         </td>
                     </tr>
                     <tr>

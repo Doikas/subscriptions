@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Mail\ExpirationReminder30Days;
-use App\Mail\ExpirationReminder15Days;
 use App\Mail\ExpirationReminder5Days;
 use App\Mail\ExpirationReminder0Days;
 use App\Models\Subscription;
@@ -55,7 +54,7 @@ class SubscriptionExpirationReminder extends Command
 
         $daysUntilExpiration = $present->diffInDays($expiredDate);
 
-        if ($daysUntilExpiration === 30) {
+        if ($daysUntilExpiration === 30 || $daysUntilExpiration === 15) {
             $data = [
                 'customer.email' => $subscription->customer->email,
                 'customer.pronunciation' => $subscription->customer->pronunciation,
@@ -67,18 +66,6 @@ class SubscriptionExpirationReminder extends Command
             Mail::to($subscription->customer->email)
             ->cc('alexakis@wdesign.gr')
             ->send(new ExpirationReminder30Days($data));
-        }elseif ($daysUntilExpiration === 15) {
-            $data = [
-                'customer.email' => $subscription->customer->email,
-                'customer.pronunciation' => $subscription->customer->pronunciation,
-                'service.name' => $subscription->service->name,
-                'domain' => $subscription->domain,
-                'expired_date' => $expiredDate->formatLocalized('%d-%m-%Y'),
-            ];
-
-            Mail::to($subscription->customer->email)
-            ->cc('alexakis@wdesign.gr')
-            ->send(new ExpirationReminder15Days($data));
         }elseif ($daysUntilExpiration === 5) {
             $data = [
                 'customer.email' => $subscription->customer->email,

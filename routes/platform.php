@@ -172,7 +172,4 @@ Route::get('subscriptions/get-expiration/{serviceId}', [ServiceController::class
 
 Route::post('subscriptions/send-status-email/{id}', [SubscriptionListScreen::class, 'sendStatusEmail'])
             ->name('platform.subscriptions.sendStatusEmail');
-
-Route::post('main/send-status-email/{id}', [SubscriptionListScreen::class, 'sendStatusEmail'])
-            ->name('platform.subscriptions.sendStatusEmail');
             

@@ -38,12 +38,6 @@ class CustomerEditLayout extends Rows
                 ->title(__('Email'))
                 ->placeholder(__('Email')),
 
-            Input::make('customer.website')
-                ->type('text')
-                ->max(255)
-                ->title(__('Website'))
-                ->placeholder(__('Website')),
-
             Input::make('customer.pronunciation')
                 ->type('text')
                 ->max(255)

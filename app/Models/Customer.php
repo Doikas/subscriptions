@@ -17,7 +17,6 @@ class Customer extends Model
         'firstname',
         'lastname',
         'email',
-        'website',
         'phone',
         'pronunciation',
         'notes',
@@ -30,7 +29,6 @@ class Customer extends Model
         'lastname',
         'email',
         'pronunciation',
-        'website',
         'fullname',
     ];
     protected $allowedSorts = [
@@ -41,7 +39,6 @@ class Customer extends Model
         'pronunciation',
         'phone',
         'fullname',
-        'website',
         'updated_at',
         'created_at',
     ];

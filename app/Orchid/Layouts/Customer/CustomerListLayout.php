@@ -46,10 +46,6 @@ class CustomerListLayout extends Table
                     ->asyncParameters([
                         'customer' => $customer->id,
                     ])),
-
-            TD::make('website', __('Website'))
-                    ->sort()
-                    ->cantHide(),
                     
             TD::make('pronunciation', __('Pronunciation'))
                     ->sort()

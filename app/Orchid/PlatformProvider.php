@@ -91,6 +91,10 @@ class PlatformProvider extends OrchidServiceProvider
             Menu::make(__('Subscriptions'))
                 ->icon('list')
                 ->route('platform.systems.subscriptions'),
+                
+            Menu::make(__('Email Logs'))
+                ->icon('list')
+                ->route('platform.systems.emailogs'),
 
             Menu::make(__('Users'))
                 ->icon('user')

@@ -15,6 +15,8 @@ use App\Orchid\Layouts\Subscription\SubscriptionEditLayout;
 use App\Orchid\Layouts\Subscription\SubscriptionListLayout;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Models\EmailLog;
 use Orchid\Support\Facades\Toast;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
@@ -22,6 +24,7 @@ use App\Mail\SubscriptionStatusNotification;
 use App\Mail\ExpirationReminder30Days;
 use App\Mail\ExpirationReminder5Days;
 use App\Mail\ExpirationReminder0Days;
+use Illuminate\Mail\Mailable;
 
 class PlatformScreen extends Screen
 {
@@ -148,83 +151,142 @@ class PlatformScreen extends Screen
     }
 
     public function sendStatusEmail($id)
-    {
-        // Retrieve the subscription by ID
-        $subscription = Subscription::findOrFail($id);
-        $expiredDate = Carbon::parse($subscription->expired_date);
-        $present = Carbon::now('Europe/Athens');
-    
-        if($expiredDate->isFuture()){
+{
+    // Retrieve the subscription by ID
+    $subscription = Subscription::findOrFail($id);
+    $expiredDate = Carbon::parse($subscription->expired_date);
+    $present = Carbon::now('Europe/Athens');
+    $emailSentSuccessfully = false;
+
+    if ($expiredDate->isFuture()) {
         $daysUntilExpiration = $present->diffInDays($expiredDate);
-    
-        if ($daysUntilExpiration > 30){
+
+        $subject = '';
+        $content = '';
+
+        if ($daysUntilExpiration > 30) {
             $data = [
-                'customer.email' => $subscription->customer->email,
-                'customer.pronunciation' => $subscription->customer->pronunciation,
-                'service.name' => $subscription->service->name,
+                'customer_pronunciation' => $subscription->customer->pronunciation,
+                'service_name' => $subscription->service->name,
                 'domain' => $subscription->domain,
                 'expired_date' => $expiredDate->formatLocalized('%d-%m-%Y'),
+                'content' => $content,
             ];
-    
-            Mail::to($subscription->customer->email)
-            ->cc('alexakis@wdesign.gr')
-            ->send(new SubscriptionStatusNotification($data));
-            Toast::info(__('Status email sent successfully'), 'success');
-        }elseif ($daysUntilExpiration <= 30 && $daysUntilExpiration > 5) {
+            $functionHelper = new \App\FunctionHelper();
+            $emailView = 'email.subscription_statusnotification'; // Set the email view here
+            $subject = $functionHelper->getEmailSubject($emailView);
+            $content = view('email.subscription_statusnotification', $data)->render();
+            $mailable = new \App\Mail\SubscriptionStatusNotification($data, $subject, $content);
+        } elseif ($daysUntilExpiration <= 30 && $daysUntilExpiration > 5) {
             $data = [
-                'customer.email' => $subscription->customer->email,
-                'customer.pronunciation' => $subscription->customer->pronunciation,
-                'service.name' => $subscription->service->name,
+                'customer_pronunciation' => $subscription->customer->pronunciation,
+                'service_name' => $subscription->service->name,
                 'domain' => $subscription->domain,
                 'expired_date' => $expiredDate->formatLocalized('%d-%m-%Y'),
+                'content' => $content,
             ];
-    
-            Mail::to($subscription->customer->email)
-            ->cc('alexakis@wdesign.gr')
-            ->send(new ExpirationReminder30Days($data));
-            Toast::info(__('Status email sent successfully'), 'success');
-        }elseif ($daysUntilExpiration <= 5 && $daysUntilExpiration > 0) {
+            $functionHelper = new \App\FunctionHelper();
+            $emailView = 'email.expiration_reminder30days'; // Set the email view here
+            $subject = $functionHelper->getEmailSubject($emailView);
+            $content = view('email.expiration_reminder30days', $data)->render();
+            $mailable = new \App\Mail\ExpirationReminder30Days($data, $subject, $content);
+        } elseif ($daysUntilExpiration <= 5 && $daysUntilExpiration > 0) {
             $data = [
-                'customer.email' => $subscription->customer->email,
-                'customer.pronunciation' => $subscription->customer->pronunciation,
-                'service.name' => $subscription->service->name,
+                'customer_pronunciation' => $subscription->customer->pronunciation,
+                'service_name' => $subscription->service->name,
                 'domain' => $subscription->domain,
                 'expired_date' => $expiredDate->formatLocalized('%d-%m-%Y'),
+                'content' => $content,
             ];
-    
-            Mail::to($subscription->customer->email)
-            ->cc('alexakis@wdesign.gr')
-            ->send(new ExpirationReminder5Days($data));
-            Toast::info(__('Status email sent successfully'), 'success');
-        }elseif ($daysUntilExpiration == 0 || $daysUntilExpiration < 0 ) {
+            $functionHelper = new \App\FunctionHelper();
+            $emailView = 'email.expiration_reminder5days'; // Set the email view here
+            $subject = $functionHelper->getEmailSubject($emailView);
+            $content = view('email.expiration_reminder5days', $data)->render();
+            $mailable = new \App\Mail\ExpirationReminder5Days($data, $subject, $content);
+        } elseif ($daysUntilExpiration == 0 || $daysUntilExpiration < 0) {
+            
             $data = [
-                'customer.email' => $subscription->customer->email,
-                'customer.pronunciation' => $subscription->customer->pronunciation,
-                'service.name' => $subscription->service->name,
+                'customer_pronunciation' => $subscription->customer->pronunciation,
+                'service_name' => $subscription->service->name,
                 'domain' => $subscription->domain,
                 'expired_date' => $expiredDate->formatLocalized('%d-%m-%Y'),
+                'content' => $content,
             ];
-    
-            Mail::to($subscription->customer->email)
+            $functionHelper = new \App\FunctionHelper();
+            $emailView = 'email.expiration_reminder0days'; // Set the email view here
+            $subject = $functionHelper->getEmailSubject($emailView);
+            $content = view('email.expiration_reminder0days', $data)->render();
+            $mailable = new \App\Mail\ExpirationReminder0Days($data, $subject, $content);
+        }
+
+        if (!empty($subject) && !empty($content)) {
+            // Send the email
+            $sentMessage = Mail::to($subscription->customer->email)
             ->cc('alexakis@wdesign.gr')
-            ->send(new ExpirationReminder0Days($data));
-            Toast::info(__('Status email sent successfully'), 'success');
+            ->send($mailable);
+            
+            
+            $emailSentSuccessfully = $sentMessage !== null;
+
+            // Insert a record into the email logs table
+            $this->insertEmailLog($subscription->id, $subject, $content, $emailSentSuccessfully);
+            if ($emailSentSuccessfully) {
+                Toast::info(__('Status email sent successfully'), 'success');
+            }
+            
         }
     }else {
+        $subject = '';
+        $content = '';
         $data = [
-            'customer.email' => $subscription->customer->email,
-            'customer.pronunciation' => $subscription->customer->pronunciation,
-            'service.name' => $subscription->service->name,
+            'customer_pronunciation' => $subscription->customer->pronunciation,
+            'service_name' => $subscription->service->name,
             'domain' => $subscription->domain,
             'expired_date' => $expiredDate->formatLocalized('%d-%m-%Y'),
+            'content' => $content,
         ];
-    
-        Mail::to($subscription->customer->email)
-        ->cc('alexakis@wdesign.gr')
-        ->send(new ExpirationReminder0Days($data));
-        Toast::info(__('Status email sent successfully'), 'success');
+        $functionHelper = new \App\FunctionHelper();
+        $emailView = 'email.expiration_reminder0days'; // Set the email view here
+        $subject = $functionHelper->getEmailSubject($emailView);
+        $content = view('email.expiration_reminder0days', $data)->render();
+        $mailable = new \App\Mail\ExpirationReminder0Days($data, $subject, $content);
+
+        if (!empty($subject) && !empty($content)) {
+            // Send the email
+            $sentMessage = Mail::to($subscription->customer->email)
+            ->cc('alexakis@wdesign.gr')
+            ->send($mailable);
+            
+            
+            $emailSentSuccessfully = $sentMessage !== null;
+
+            // Insert a record into the email logs table
+            $this->insertEmailLog($subscription->id, $subject, $content, $emailSentSuccessfully);
+            if ($emailSentSuccessfully) {
+                Toast::info(__('Status email sent successfully'), 'success');
+            }
+            
+        }
+
     }
-    
-        return back();
-    }
+
+    return back();
+}
+
+
+/**
+ * Insert a record into the email logs table.
+ */
+private function insertEmailLog($subscriptionId, $subject, $content, $sentSuccessfully)
+{
+    $emailLog = new EmailLog();
+    $emailLog->subscription_id = $subscriptionId; // Associate the email log with the subscription
+    $emailLog->subject = $subject; // Replace with the actual subject
+    $emailLog->content = $content; // Replace with the actual content
+    $emailLog->sent_successfully = $sentSuccessfully;
+    $emailLog->sent_at = now(); // You can add a timestamp for when the email was sent
+    $emailLog->save();
+}
+
+
 }

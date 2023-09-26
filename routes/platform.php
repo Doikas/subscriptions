@@ -24,6 +24,7 @@ use App\Orchid\Screens\Services\ServiceEditScreen;
 use App\Orchid\Screens\Subscriptions\SubscriptionListScreen;
 use App\Orchid\Screens\Subscriptions\SubscriptionEditScreen;
 use App\Http\Controllers\ServiceController;
+use App\Orchid\Screens\EmailLog\EmailLogListScreen;
 
 /*
 |--------------------------------------------------------------------------
@@ -172,4 +173,11 @@ Route::get('subscriptions/get-expiration/{serviceId}', [ServiceController::class
 
 Route::post('subscriptions/send-status-email/{id}', [SubscriptionListScreen::class, 'sendStatusEmail'])
             ->name('platform.subscriptions.sendStatusEmail');
+
+Route::screen('emaillogs', EmailLogListScreen::class)
+    ->name('platform.systems.emailogs')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(__('Email Logs'), route('platform.systems.emailogs')));
+
             

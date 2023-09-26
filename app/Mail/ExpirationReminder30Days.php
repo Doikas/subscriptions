@@ -32,59 +32,40 @@
  use Illuminate\Support\Facades\Log;
  
  class ExpirationReminder30Days extends Mailable
- {
-     use Queueable, SerializesModels;
-     public $data;
- 
-     // Remove the duplicated declaration of $data from here
-     // public $data;
- 
-     /**
-      * Create a new message instance.
-      *
-      * @return void
-      */
-     public function __construct($data)
-     {
-        $this->data = $data;
-     }
- 
-     /**
-      * Build the message.
-      *
-      * @return $this
-      */
-     public function envelope()
-     {
-         return new Envelope(
-             subject: 'Update',
-         );
-     }
- 
-     public function content()
-     {
-        Log::channel('custom')->info('Data received:', $this->data);
+{
+    use Queueable, SerializesModels;
 
-         //dd($this->data);
-         return new Content(
- 
-             view: 'email.expiration_reminder30days',
-             with: [
-                 'customer_pronunciation' => $this->data['customer.pronunciation'],
-                 'service_name' => $this->data['service.name'],
-                 'domain' => $this->data['domain'],
-                 'expired_date' => $this->data['expired_date'],
-             ],
-             
-         );
-     }
- 
-     public function attachments()
-     {
-         return [];
-     }
-     // public function build()
-     // {
-     //     return $this->view('email.expiration_reminder');
-     // }
- }
+    public $data;
+
+    /**
+     * Create a new message instance.
+     *
+     * @param array $data
+     * @param string $subject
+     * @param string $content
+     * @return void
+     */
+    public function __construct($data, $subject, $content)
+    {
+        $this->data = $data;
+        $this->subject($subject);
+        
+    }
+
+    public function build()
+    {
+        return $this
+            ->view('email.expiration_reminder30days')
+            ->with([
+                'customer_pronunciation' => $this->data['customer_pronunciation'],
+                'service_name' => $this->data['service_name'],
+                'domain' => $this->data['domain'],
+                'expired_date' => $this->data['expired_date'],
+                'content' => $this->data['content'], // Add 'content' if you need it
+            ]);
+    }
+    public function attachments()
+    {
+        return [];
+    }
+}

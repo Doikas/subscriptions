@@ -51,6 +51,7 @@ class SubscriptionExpirationReminder extends Command
         $present = Carbon::now('Europe/Athens');
     
         foreach ($subscriptions as $subscription) {
+            $ccEmail = env('CC_EMAIL');
             $last_email_automation_sent_at = Carbon::parse($subscription->last_email_automation_sent_at);
             if($last_email_automation_sent_at->isToday()){
                 continue;
@@ -107,7 +108,7 @@ class SubscriptionExpirationReminder extends Command
                 if (!empty($subject) && !empty($content)) {
                     // Send the email
                     $sentMessage = Mail::to($subscription->customer->email)
-                    ->cc('alexakis@wdesign.gr')
+                    ->cc($ccEmail)
                     ->send($mailable);
                     
                     

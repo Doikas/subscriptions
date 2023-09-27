@@ -157,6 +157,7 @@ class PlatformScreen extends Screen
     $expiredDate = Carbon::parse($subscription->expired_date);
     $present = Carbon::now('Europe/Athens');
     $emailSentSuccessfully = false;
+    $ccEmail = env('CC_EMAIL');
 
     if ($expiredDate->isFuture()) {
         $daysUntilExpiration = $present->diffInDays($expiredDate);
@@ -222,7 +223,7 @@ class PlatformScreen extends Screen
         if (!empty($subject) && !empty($content)) {
             // Send the email
             $sentMessage = Mail::to($subscription->customer->email)
-            ->cc('alexakis@wdesign.gr')
+            ->cc($ccEmail)
             ->send($mailable);
             
             
@@ -254,7 +255,7 @@ class PlatformScreen extends Screen
         if (!empty($subject) && !empty($content)) {
             // Send the email
             $sentMessage = Mail::to($subscription->customer->email)
-            ->cc('alexakis@wdesign.gr')
+            ->cc($ccEmail)
             ->send($mailable);
             
             

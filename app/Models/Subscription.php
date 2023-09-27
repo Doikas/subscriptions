@@ -27,6 +27,7 @@ class Subscription extends Model
         'start_date',
         'expired_date',
         'notes',
+        'last_email_automation_sent_at',
     ];
     protected $allowedFilters = [
         'id',

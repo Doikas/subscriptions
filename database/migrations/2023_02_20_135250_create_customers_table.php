@@ -21,8 +21,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('notes')->nullable();
             $table->string('pronunciation')->nullable();
-            $table->timestamps();
             $table->string('fullname')->virtualAs('CONCAT(firstname, " ", lastname)');
+            $table->timestamps();
         });
     }
 

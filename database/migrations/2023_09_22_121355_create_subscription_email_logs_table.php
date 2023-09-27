@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('subject');
             $table->longText('content');
             $table->boolean('sent_successfully')->default(false);
-            $table->timestamp('sent_at')->nullable();
+            $table->date('sent_at')->nullable();
             $table->timestamps();
         });
     }

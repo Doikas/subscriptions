@@ -20,9 +20,10 @@ return new class extends Migration
             $table->string('domain',250)->nullable();
             $table->float('price');
             $table->boolean('paid_status')->default(false);
-            $table->timestamp('start_date')->nullable();
-            $table->timestamp('expired_date')->nullable();
+            $table->date('start_date')->nullable();
+            $table->date('expired_date')->nullable();
             $table->string('notes')->nullable();
+            $table->timestamp('last_email_automation_sent_at')->nullable();
             $table->timestamps();
         });
     }

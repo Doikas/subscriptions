@@ -51,11 +51,14 @@ class SubscriptionExpirationReminder extends Command
         $present = Carbon::now('Europe/Athens');
     
         foreach ($subscriptions as $subscription) {
-            // Ensure $subscription->expired_date is a Carbon date object
+            $last_email_automation_sent_at = Carbon::parse($subscription->last_email_automation_sent_at);
+            if($last_email_automation_sent_at->isToday()){
+                continue;
+            }
             $expiredDate = Carbon::parse($subscription->expired_date);
             $emailSentSuccessfully = false;
     
-            if ($expiredDate->isFuture()) {
+            if ($expiredDate->isFuture() || $expiredDate->isToday()) {
                 $daysUntilExpiration = $present->diffInDays($expiredDate);
                 
                 $subject = '';
@@ -109,7 +112,7 @@ class SubscriptionExpirationReminder extends Command
                     
                     
                     $emailSentSuccessfully = $sentMessage !== null;
-        
+                    $subscription->update(['last_email_automation_sent_at' => now()]);
                     $this->insertEmailLog($subscription->id, $subject, $content, $emailSentSuccessfully);
                     
                 }
@@ -131,6 +134,5 @@ class SubscriptionExpirationReminder extends Command
         $emailLog->sent_at = now(); // You can add a timestamp for when the email was sent
         $emailLog->save();
     }
-    
     
 }

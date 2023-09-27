@@ -3,7 +3,7 @@
 namespace App\Orchid\Layouts\Subscription;
 
 use App\Orchid\Filters\SubscriptionFilter;
-use App\Orchid\Filters\CustomerSortEmail;
+use App\Orchid\Filters\SubscriptionFiltersLayoutTable;
 use Orchid\Filters\Filter;
 use Orchid\Screen\Layouts\Selection;
 

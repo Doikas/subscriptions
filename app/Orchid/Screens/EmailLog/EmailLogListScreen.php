@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\EmailLog;
 use App\Orchid\Layouts\EmailLog\EmailLogListLayout;
 use Orchid\Support\Facades\Layout;
+use App\Orchid\Layouts\EmailLog\EmailLogFiltersLayout;
+use App\Orchid\Layouts\EmailLog\EmailLogFiltersLayoutTable;
 
 class EmailLogListScreen extends Screen
 {
@@ -21,6 +23,8 @@ class EmailLogListScreen extends Screen
 
         return [
             'subscription_email_logs' => EmailLog::with('subscription', 'subscription.service', 'subscription.customer')
+                ->filters(EmailLogFiltersLayout::class)
+                ->filters(EmailLogFiltersLayoutTable::class)
                 ->defaultSort('sent_at', 'desc')
                 ->paginate(),
         ];
@@ -58,6 +62,7 @@ class EmailLogListScreen extends Screen
     public function layout(): iterable
     {
         return [
+            EmailLogFiltersLayout::class,
             EmailLogListLayout::class,
         ];
     }

@@ -90,7 +90,7 @@ class PlatformScreen extends Screen
             ->orWhere('expired_date', '<', $present)
             ->filters(SubscriptionFiltersLayout::class)
             ->filters(SubscriptionFiltersLayoutTable::class)
-            ->defaultSort('expired_date', 'asc')
+            ->defaultSort('expired_date', 'desc')
             ->paginate(),
     ];
 }

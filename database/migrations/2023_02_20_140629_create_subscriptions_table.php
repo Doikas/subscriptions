@@ -22,7 +22,7 @@ return new class extends Migration
             $table->boolean('paid_status')->default(false);
             $table->date('start_date')->nullable();
             $table->date('expired_date')->nullable();
-            $table->string('notes')->nullable();
+            $table->longText('notes')->nullable();
             $table->timestamp('last_email_automation_sent_at')->nullable();
             $table->timestamps();
         });

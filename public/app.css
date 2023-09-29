@@ -26,3 +26,10 @@
     padding: 0 25px;
   }
 }
+.px-md-5 {
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+}
+.container-md.h-full.px-0.px-md-5 {
+  max-width:1650px !important;
+}

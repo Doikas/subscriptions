@@ -78,7 +78,7 @@ class ServiceEditScreen extends Screen
         return [
             Layout::block(ServiceEditLayout::class)
                 ->title(__('Service Information'))
-                ->description(__('Update your account\'s profile information and email address.'))
+                ->description(__('Please fill in the required information to create or update a new service.'))
                 ->commands(
                     Button::make(__('Update'))
                         ->type(Color::DEFAULT())

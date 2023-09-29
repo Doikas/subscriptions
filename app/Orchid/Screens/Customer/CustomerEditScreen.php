@@ -82,8 +82,8 @@ class CustomerEditScreen extends Screen
     {
         return [
             Layout::block(CustomerEditLayout::class)
-                ->title(__('Profile Information'))
-                ->description(__('Update your account\'s profile information and email address.'))
+                ->title(__('Customer Information'))
+                ->description(__('Please fill in the required information to create or update a new customer.'))
                 ->commands(
                     Button::make(__('Update'))
                         ->type(Color::DEFAULT())

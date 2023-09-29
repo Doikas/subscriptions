@@ -85,7 +85,7 @@ class SubscriptionEditScreen extends Screen
         return [
             Layout::block(SubscriptionEditLayout::class)
                 ->title(__('Subscription Information'))
-                ->description(__('Update your account\'s profile information and email address.'))
+                ->description(__('Please fill in the required information to create or update a new subscription.'))
                 ->commands(
                     Button::make(__('Update'))
                         ->type(Color::DEFAULT())

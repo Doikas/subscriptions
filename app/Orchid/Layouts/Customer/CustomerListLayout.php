@@ -48,8 +48,7 @@ class CustomerListLayout extends Table
                     ])),
                     
             TD::make('pronunciation', __('Pronunciation'))
-                    ->sort()
-                    ->cantHide(),     
+                    ->sort(),     
 
             TD::make('phone', __('Phone'))
                     ->sort(),

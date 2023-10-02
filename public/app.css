@@ -1,6 +1,6 @@
 .sendstatusemail {
   background-color: #1b8b98;
-  border: 1px solid #000;
+  border: 1px solid #1b8b98;
   border-radius: 30px;
   color: #fff;
   cursor: pointer;
@@ -22,8 +22,8 @@
 
 @media (min-width: 768px) {
   .sendstatusemail {
-    min-width: 120px;
-    padding: 0 25px;
+    min-width: 105px;
+    padding: 0 10px;
   }
 }
 .px-md-5 {

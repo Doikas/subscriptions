@@ -171,8 +171,8 @@ Route::screen('subscriptions/create', SubscriptionEditScreen::class)
 Route::get('subscriptions/get-expiration/{serviceId}', [ServiceController::class, 'getExpiration'])
     ->name('platform.service.getExpiration');
 
-Route::post('subscriptions/send-status-email/{id}', [SubscriptionListScreen::class, 'sendStatusEmail'])
-            ->name('platform.subscriptions.sendStatusEmail');
+Route::post('/send-status-email/{id}', [SubscriptionListScreen::class, 'sendStatusEmail'])
+    ->name('platform.subscriptions.sendStatusEmail');
 
 Route::screen('emaillogs', EmailLogListScreen::class)
     ->name('platform.systems.emailogs')

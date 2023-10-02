@@ -9,6 +9,7 @@ use Orchid\Filters\Filter;
 use App\Models\Customer;
 use App\Models\Subscription;
 use Orchid\Screen\Fields\Select;
+use Orchid\Screen\Fields\Relation;
 use Orchid\Screen\Fields\Input;
 
 class SubscriptionFilter extends Filter
@@ -35,9 +36,10 @@ class SubscriptionFilter extends Filter
     $customerFilter = $this->request->get('customer');
     $domainFilter = $this->request->get('domain');
     $emailFilter = $this->request->get('email');
+    $subscriptionFilter = $this->request->get('subscription');
 
     // Join the Customer table to access the email field
-    $builder = $builder->join('customers', 'subscriptions.customer_id', '=', 'customers.id');
+    $builder = $builder->join('customers', 'subscriptions.customer_id', '=', 'customers.id')->select('subscriptions.*', 'customers.email');
 
     // Start with a base query that always includes the customer filter
     $builder = $builder->where('customers.id', $customerFilter);
@@ -75,11 +77,9 @@ class SubscriptionFilter extends Filter
         });
 
         return [
-            Select::make('customer')
-                ->options($customerOptions)
-                ->empty()
-                ->value($this->request->get('customer'))
-                ->title(__('Customer')),
+            Relation::make('customer')
+               ->fromModel(Customer::class, 'fullname') // Assuming 'fullname' is a field in the Customer model representing the full name.
+               ->title(__('Customer')),
             
             Select::make('domain')
                 ->options($domainOptions)

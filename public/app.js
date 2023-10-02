@@ -53,3 +53,31 @@ function formatDate(date) {
     const seconds = String(date.getSeconds()).padStart(2, '0');
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
+
+const button = document.querySelector('.send-status-button');
+button.addEventListener('click', function() {
+    const subscriptionId = button.getAttribute('data-subscription-id');
+    
+    const queryParameters = window.location.search.substr(1);
+    const urlParams = new URLSearchParams(queryParameters);
+    
+    const customerFilter = urlParams.get('customer');
+    const domainFilter = urlParams.get('domain');
+    const emailFilter = urlParams.get('email');
+    
+    // Make an AJAX request with the captured values
+    fetch(`/send-status-email/${subscriptionId}?customer=${customerFilter}&domain=${domainFilter}&email=${emailFilter}`, {
+        method: 'POST', // Adjust the HTTP method as needed
+    })
+    .then(response => {
+        // Handle the response from the server
+        if (response.ok) {
+            // The request was successful
+        } else {
+            // Handle errors
+        }
+    })
+    .catch(error => {
+        // Handle network or other errors
+    });
+});

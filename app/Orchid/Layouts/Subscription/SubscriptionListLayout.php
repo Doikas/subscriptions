@@ -38,9 +38,16 @@ class SubscriptionListLayout extends Table
     {
         return [
             TD::make('service.name', __('Service Name'))
-            ->render(function (Subscription $subscription) {
+                ->render(function (Subscription $subscription) {
                 return $subscription->service->name;
                 })
+                ->render(fn (Subscription $subscription) => ModalToggle::make($subscription->service->name)
+                    ->modal('asyncEditSubscriptionModal')
+                    ->modalTitle($subscription->customer->fullname)
+                    ->method('saveSubscription')
+                    ->asyncParameters([
+                        'subscription' => $subscription->id,
+                    ]))
                 ->sort()
                 ->cantHide(),
 

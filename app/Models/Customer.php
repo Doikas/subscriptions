@@ -21,6 +21,7 @@ class Customer extends Model
         'pronunciation',
         'notes',
         'fullname',
+        'language',
 
     ];
     protected $allowedFilters = [
@@ -30,6 +31,7 @@ class Customer extends Model
         'email',
         'pronunciation',
         'fullname',
+        'language',
     ];
     protected $allowedSorts = [
         'id',
@@ -41,6 +43,7 @@ class Customer extends Model
         'fullname',
         'updated_at',
         'created_at',
+        'language',
     ];
     public function getFullnameAttribute()
     {

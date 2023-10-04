@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('notes')->nullable();
             $table->string('pronunciation')->nullable();
+            $table->enum('language', ['En', 'El'])->default('El');
             $table->string('fullname')->virtualAs('CONCAT(firstname, " ", lastname)');
             $table->timestamps();
         });

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('name')->unique();
             $table->string('subject');
             $table->text('content');
+            $table->enum('language', ['En', 'El'])->default('El');
             $table->timestamps();
         });
     }

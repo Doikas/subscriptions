@@ -60,6 +60,7 @@
                 'customer_pronunciation' => $this->data['customer_pronunciation'],
                 'service_name' => $this->data['service_name'],
                 'domain' => $this->data['domain'],
+                'price'  => $this->data['price'],
                 'expired_date' => $this->data['expired_date'],
                 'content' => $this->data['content'], // Add 'content' if you need it
             ]);

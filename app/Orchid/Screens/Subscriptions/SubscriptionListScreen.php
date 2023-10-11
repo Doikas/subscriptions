@@ -134,12 +134,13 @@ class SubscriptionListScreen extends Screen
                 'customer_pronunciation' => $subscription->customer->pronunciation,
                 'service_name' => $subscription->service->name,
                 'domain' => $subscription->domain,
+                'price' => $subscription->price,
                 'expired_date' => $expiredDate->formatLocalized('%d-%m-%Y'),
                 'content' => $content,
             ];
             $functionHelper = new \App\FunctionHelper();
             $emailView = 'email.subscription_statusnotification'; // Set the email view here
-            $subject = $functionHelper->getEmailSubject($emailView);
+            $subject = $functionHelper->getEmailSubject($emailView, $subscription->domain);
             $content = view('email.subscription_statusnotification', $data)->render();
             $mailable = new \App\Mail\SubscriptionStatusNotification($data, $subject, $content);
         } elseif ($daysUntilExpiration <= 30 && $daysUntilExpiration > 5) {
@@ -147,12 +148,13 @@ class SubscriptionListScreen extends Screen
                 'customer_pronunciation' => $subscription->customer->pronunciation,
                 'service_name' => $subscription->service->name,
                 'domain' => $subscription->domain,
+                'price' => $subscription->price,
                 'expired_date' => $expiredDate->formatLocalized('%d-%m-%Y'),
                 'content' => $content,
             ];
             $functionHelper = new \App\FunctionHelper();
             $emailView = 'email.expiration_reminder30days'; // Set the email view here
-            $subject = $functionHelper->getEmailSubject($emailView);
+            $subject = $functionHelper->getEmailSubject($emailView, $subscription->domain);
             $content = view('email.expiration_reminder30days', $data)->render();
             $mailable = new \App\Mail\ExpirationReminder30Days($data, $subject, $content);
         } elseif ($daysUntilExpiration <= 5 && $daysUntilExpiration > 0) {
@@ -160,12 +162,13 @@ class SubscriptionListScreen extends Screen
                 'customer_pronunciation' => $subscription->customer->pronunciation,
                 'service_name' => $subscription->service->name,
                 'domain' => $subscription->domain,
+                'price' => $subscription->price,
                 'expired_date' => $expiredDate->formatLocalized('%d-%m-%Y'),
                 'content' => $content,
             ];
             $functionHelper = new \App\FunctionHelper();
             $emailView = 'email.expiration_reminder5days'; // Set the email view here
-            $subject = $functionHelper->getEmailSubject($emailView);
+            $subject = $functionHelper->getEmailSubject($emailView, $subscription->domain);
             $content = view('email.expiration_reminder5days', $data)->render();
             $mailable = new \App\Mail\ExpirationReminder5Days($data, $subject, $content);
         } elseif ($daysUntilExpiration == 0 || $daysUntilExpiration < 0) {
@@ -174,12 +177,13 @@ class SubscriptionListScreen extends Screen
                 'customer_pronunciation' => $subscription->customer->pronunciation,
                 'service_name' => $subscription->service->name,
                 'domain' => $subscription->domain,
+                'price' => $subscription->price,
                 'expired_date' => $expiredDate->formatLocalized('%d-%m-%Y'),
                 'content' => $content,
             ];
             $functionHelper = new \App\FunctionHelper();
             $emailView = 'email.expiration_reminder0days'; // Set the email view here
-            $subject = $functionHelper->getEmailSubject($emailView);
+            $subject = $functionHelper->getEmailSubject($emailView, $subscription->domain);
             $content = view('email.expiration_reminder0days', $data)->render();
             $mailable = new \App\Mail\ExpirationReminder0Days($data, $subject, $content);
         }
@@ -207,12 +211,13 @@ class SubscriptionListScreen extends Screen
             'customer_pronunciation' => $subscription->customer->pronunciation,
             'service_name' => $subscription->service->name,
             'domain' => $subscription->domain,
+            'price' => $subscription->price,
             'expired_date' => $expiredDate->formatLocalized('%d-%m-%Y'),
             'content' => $content,
         ];
         $functionHelper = new \App\FunctionHelper();
         $emailView = 'email.expiration_reminder0days'; // Set the email view here
-        $subject = $functionHelper->getEmailSubject($emailView);
+        $subject = $functionHelper->getEmailSubject($emailView, $subscription->domain);
         $content = view('email.expiration_reminder0days', $data)->render();
         $mailable = new \App\Mail\ExpirationReminder0Days($data, $subject, $content);
 

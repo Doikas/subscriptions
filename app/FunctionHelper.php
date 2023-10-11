@@ -24,17 +24,17 @@ use App\Mail\ExpirationReminder0Days;
 use Illuminate\Mail\Mailable;
 
 class FunctionHelper {
-    public function getEmailSubject($emailView)
+    public function getEmailSubject($emailView, $domain)
     {
         switch ($emailView) {
             case 'email.expiration_reminder0days':
-                return 'Important: Expired';
+                return ' ΠΡΟΣΟΧΗ: ' . $domain . ' - Η υπηρεσία σας έχει λήξει';
             case 'email.expiration_reminder5days':
-                return 'Important: Expire Soon';
+                return 'ΣΗΜΑΝΤΙΚΟ: ' . $domain . ' - Η υπηρεσία σας λήγει σύντομα';
             case 'email.expiration_reminder30days':
-                return 'Important: Expire Soon';
+                return $domain . ' - Η υπηρεσία σας λήγει σύντομα';
             case 'email.subscription_statusnotification':
-                return 'Update';
+                return $domain . ' - Η υπηρεσία σας ενημερώθηκε';
         }
     }
 }

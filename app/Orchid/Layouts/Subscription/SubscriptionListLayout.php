@@ -55,23 +55,20 @@ class SubscriptionListLayout extends Table
                 ->render(function (Subscription $subscription) {
                 return $subscription->customer->fullname;
                 })
-                ->sort()
-                ->cantHide(),
+                ->sort(),
 
                 TD::make('customer.email', __('Customer Email'))
                 ->render(function (Subscription $subscription) {
                     return $subscription->customer->email;
                 })
-                ->sort()
-                ->cantHide(),
+                ->sort(),
 
             TD::make('domain', __('Domain'))
                 ->sort()
                 ->cantHide(),
 
             TD::make('price', __('Price'))
-                    ->sort()
-                    ->cantHide(),
+                    ->sort(),
 
             // TD::make('paid_status', __('Paid Status'))
             // ->render(function ($checkbox){
@@ -81,15 +78,13 @@ class SubscriptionListLayout extends Table
             // }}),
 
             TD::make('start_date', __('Start Date'))
-                    ->sort()
-                    ->cantHide(),
+                    ->sort(),
 
             TD::make('expired_date', __('Expired Date'))
                     ->sort()
                     ->cantHide(),
 
-            TD::make('notes', __('Notes'))
-                    ->cantHide(),
+            TD::make('notes', __('Notes')),
                     
 
             // TD::make('updated_at', __('Last edit'))

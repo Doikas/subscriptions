@@ -124,7 +124,7 @@ class SubscriptionListScreen extends Screen
     $ccEmail = env('CC_EMAIL');
 
     if ($expiredDate->isFuture()) {
-        $daysUntilExpiration = $present->diffInDays($expiredDate);
+        $daysUntilExpiration = $present->startOfDay()->diffInDays(($expiredDate)->startOfDay());
 
         $subject = '';
         $content = '';

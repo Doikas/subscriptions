@@ -52,15 +52,17 @@ class SubscriptionExpirationReminder extends Command
     
         foreach ($subscriptions as $subscription) {
             $ccEmail = env('CC_EMAIL');
-            $last_email_automation_sent_at = Carbon::parse($subscription->last_email_automation_sent_at);
-            if($last_email_automation_sent_at->isToday()){
-                continue;
+            if ($subscription->last_email_automation_sent_at !== null) {
+                $last_email_automation_sent_at = Carbon::parse($subscription->last_email_automation_sent_at);
+                if ($last_email_automation_sent_at->isToday()) {
+                    continue;
+                }
             }
             $expiredDate = Carbon::parse($subscription->expired_date);
             $emailSentSuccessfully = false;
     
             if ($expiredDate->isFuture() || $expiredDate->isToday()) {
-                $daysUntilExpiration = $present->diffInDays($expiredDate);
+                $daysUntilExpiration = $present->startOfDay()->diffInDays(($expiredDate)->startOfDay());
                 
                 $subject = '';
                 $content = '';

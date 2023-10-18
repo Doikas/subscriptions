@@ -56,6 +56,7 @@ class SubscriptionEditLayout extends Rows
             Relation::make('subscription.service_id')
                 ->fromModel(Service::class, 'name', 'id')
                 ->title(__('Service'))
+                ->chunk(100)
                 ->id('custom-service-field'),
 
             Relation::make('subscription.customer_id')

@@ -58,7 +58,7 @@ class ServiceEditScreen extends Screen
             Button::make(__('Remove'))
                 ->icon('trash')
                 ->confirm(__('Once the service is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.'))
-                ->method('remove')
+                ->method('remove', ['service' => $this->service])
                 ->canSee($this->service->exists),
 
             Button::make(__('Update'))
@@ -94,6 +94,15 @@ class ServiceEditScreen extends Screen
         $service->fill($request->get('service'))->save();
 
         Toast::info(__('Service was created.'));
+
+        return redirect()->route('platform.systems.services');
+    }
+
+    public function remove(Service $service)
+    {
+        $service->delete();
+
+        Toast::info(__('Service was removed'));
 
         return redirect()->route('platform.systems.services');
     }

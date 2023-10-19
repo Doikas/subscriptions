@@ -62,7 +62,7 @@ class CustomerEditScreen extends Screen
             Button::make(__('Remove'))
                 ->icon('trash')
                 ->confirm(__('Once the customer is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.'))
-                ->method('remove')
+                ->method('remove', ['customer' => $this->customer])
                 ->canSee($this->customer->exists),
 
             Button::make(__('Update'))
@@ -99,6 +99,15 @@ class CustomerEditScreen extends Screen
         $customer->fill($request->get('customer'))->save();
 
         Toast::info(__('Customer was created.'));
+
+        return redirect()->route('platform.systems.customers');
+    }
+
+    public function remove(Customer $customer)
+    {
+        $customer->delete();
+
+        Toast::info(__('Customer was removed'));
 
         return redirect()->route('platform.systems.customers');
     }

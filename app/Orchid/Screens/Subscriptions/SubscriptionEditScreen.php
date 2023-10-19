@@ -65,7 +65,7 @@ class SubscriptionEditScreen extends Screen
             Button::make(__('Remove'))
                 ->icon('trash')
                 ->confirm(__('Once the subscription is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.'))
-                ->method('remove')
+                ->method('remove', ['subscription' => $this->subscription])
                 ->canSee($this->subscription->exists),
 
             Button::make(__('Update'))
@@ -103,6 +103,15 @@ class SubscriptionEditScreen extends Screen
         $subscription->fill($request->get('subscription'))->save();
 
         Toast::info(__('Subscription was created.'));
+
+        return redirect()->route('platform.systems.subscriptions');
+    }
+
+    public function remove(Subscription $subscription)
+    {
+        $subscription->delete();
+
+        Toast::info(__('Subscription was removed'));
 
         return redirect()->route('platform.systems.subscriptions');
     }

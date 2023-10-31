@@ -103,8 +103,9 @@ class SubscriptionEditScreen extends Screen
         $subscription->fill($request->get('subscription'))->save();
 
         Toast::info(__('Subscription was created.'));
-
-        return redirect()->route('platform.systems.subscriptions');
+        $previousUrl = $request->input('previous_url');
+        
+        return redirect($previousUrl);
     }
 
     public function remove(Subscription $subscription)
@@ -113,6 +114,6 @@ class SubscriptionEditScreen extends Screen
 
         Toast::info(__('Subscription was removed'));
 
-        return redirect()->route('platform.systems.subscriptions');
+        return redirect()->back();
     }
 }

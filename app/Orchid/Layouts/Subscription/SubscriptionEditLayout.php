@@ -52,16 +52,18 @@ class SubscriptionEditLayout extends Rows
     }
 
         
-        return [
+        $fields = [
             Relation::make('subscription.service_id')
                 ->fromModel(Service::class, 'name', 'id')
                 ->title(__('Service'))
                 ->chunk(100)
+                ->required()
                 ->id('custom-service-field'),
 
             Relation::make('subscription.customer_id')
                 ->fromModel(Customer::class, 'fullname', 'id')
-                ->title(__('Customer')),
+                ->title(__('Customer'))
+                ->required(),
 
             Input::make('subscription.domain')
                 ->type('text')
@@ -72,7 +74,8 @@ class SubscriptionEditLayout extends Rows
             Input::make('subscription.price')
                 ->type('float')
                 ->title(__('Price'))
-                ->placeholder(__('Price')),
+                ->placeholder(__('Price'))
+                ->required(),
 
             // Checkbox::make('subscription.paid_status')
             //         ->title(__('Paid Status'))
@@ -97,6 +100,15 @@ class SubscriptionEditLayout extends Rows
                 ->title(__('Notes'))
                 ->placeholder(__('Notes')),
         ];
+        $previousUrl = url()->previous();
+        $hiddenInput = Input::make('previous_url')
+            ->type('hidden')
+            ->value($previousUrl);
+
+        // Add the hidden input field to the fields array
+        $fields[] = $hiddenInput;
+
+        return $fields;
     }
 }
 // $currentDate = Carbon::now('Europe/Athens');

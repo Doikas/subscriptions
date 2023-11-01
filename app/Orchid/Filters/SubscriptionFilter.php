@@ -11,10 +11,11 @@ use App\Models\Subscription;
 use Orchid\Screen\Fields\Select;
 use Orchid\Screen\Fields\Relation;
 use Orchid\Screen\Fields\Input;
+use App\Models\Service;
 
 class SubscriptionFilter extends Filter
 {
-    public $parameters = ['customer', 'domain', 'email'];
+    public $parameters = ['customer', 'domain', 'email', 'service'];
 
     public function customer(): string
     {
@@ -31,19 +32,30 @@ class SubscriptionFilter extends Filter
         return 'Email';
     }
 
+    public function service(): string
+    {
+        return 'Service';
+    }
+
     public function run(Builder $builder): Builder
 {
     $customerFilter = $this->request->get('customer');
     $domainFilter = $this->request->get('domain');
     $emailFilter = $this->request->get('email');
+    $serviceFilter = $this->request->get('service');
     $subscriptionFilter = $this->request->get('subscription');
 
     // Join the Customer table to access the email field
-    $builder = $builder->join('customers', 'subscriptions.customer_id', '=', 'customers.id')->select('subscriptions.*', 'customers.email');
+    $builder = $builder
+        ->join('customers', 'subscriptions.customer_id', '=', 'customers.id')
+        ->join('services', 'subscriptions.service_id', '=', 'services.id')
+        ->select('subscriptions.*', 'customers.email', 'services.name');
+
 
     // Start with a base query that always includes the customer filter
-    $builder = $builder->where('customers.id', $customerFilter);
-
+    if (!empty($customerFilter)) {
+        $builder->where('customers.id', $customerFilter);
+    }
     // Add conditions for domain and email filters using "orWhere" to allow for multiple filters
     if (!empty($domainFilter)) {
         $builder = $builder->orWhere('subscriptions.domain', $domainFilter);
@@ -51,6 +63,9 @@ class SubscriptionFilter extends Filter
 
     if (!empty($emailFilter)) {
         $builder = $builder->orWhere('customers.email', $emailFilter);
+    }
+    if (!empty($serviceFilter)) {
+        $builder->where('services.id', $serviceFilter);
     }
 
     return $builder;
@@ -64,6 +79,12 @@ class SubscriptionFilter extends Filter
 
         foreach ($customers as $customer) {
             $customerOptions[$customer->id] = "{$customer->firstname} {$customer->lastname}";
+        }
+        $services = Service::all();
+        $serviceOptions = [];
+
+        foreach ($services as $service) {
+            $serviceOptions[$service->id] = $service->name;
         }
 
         $allDomains = Subscription::pluck('domain')->unique();
@@ -92,6 +113,11 @@ class SubscriptionFilter extends Filter
                 ->empty()
                 ->value($this->request->get('email'))
                 ->title(__('Email')),
+
+            Relation::make('service')
+                ->fromModel(Service::class, 'name')
+                ->chunk(20)
+                ->title(__('Service')),
         ];
     }
 
@@ -100,8 +126,11 @@ class SubscriptionFilter extends Filter
     $selectedCustomerId = $this->request->get('customer');
     $selectedDomain = $this->request->get('domain');
     $selectedEmail = $this->request->get('email');
+    $selectedServiceId = $this->request->get('service');
     
     $customer = Customer::find($selectedCustomerId);
+    $service = Service::find($selectedServiceId);
+    $servicename = $service ? $service->name : '';
     $fullName = $customer ? "{$customer->firstname} {$customer->lastname}" : '';
     
     $email = $selectedEmail; // Email doesn't require a database lookup.
@@ -111,6 +140,13 @@ class SubscriptionFilter extends Filter
     if ($customer) {
         // Only include customer information if neither domain nor email is selected.
         $value .= $this->customer() . ': ' . $fullName;
+    }
+
+    if($service) {
+        if (!empty($value)) {
+            $value .= ', ';
+        }
+        $value .= $this->service() . ': ' . $servicename;
     }
 
     if ($selectedDomain) {

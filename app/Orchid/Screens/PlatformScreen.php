@@ -39,7 +39,7 @@ class PlatformScreen extends Screen
      */
     public function name(): ?string
     {
-        return 'Wdesign Subscriptions';
+        return 'Subscriptions Ending Soon';
     }
 
     /**

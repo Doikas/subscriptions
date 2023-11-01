@@ -55,9 +55,10 @@ class SubscriptionListLayout extends Table
             TD::make('customer.fullname', __('Customer Name'))
                 ->render(function (Subscription $subscription) {
                     $customerId = $subscription->customer->id;
-                    $currentRoute = Route::currentRouteName();
+                    //$currentRoute = Route::currentRouteName();
+                    //for staying in the same page replace the route with $currentRoute
                     return Link::make($subscription->customer->fullname)
-                    ->route($currentRoute, ['customer' => $customerId]);
+                    ->route('platform.systems.subscriptions', ['customer' => $customerId]);
                 })
                 ->sort(),
             

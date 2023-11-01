@@ -20,6 +20,7 @@ use Orchid\Screen\Layouts\Table;
 use Orchid\Screen\TD;
 use App\Models\Service;
 use App\Models\Customer;
+use Illuminate\Support\Facades\Route;
 
 
 
@@ -53,11 +54,15 @@ class SubscriptionListLayout extends Table
 
             TD::make('customer.fullname', __('Customer Name'))
                 ->render(function (Subscription $subscription) {
-                return $subscription->customer->fullname;
+                    $customerId = $subscription->customer->id;
+                    $currentRoute = Route::currentRouteName();
+                    return Link::make($subscription->customer->fullname)
+                    ->route($currentRoute, ['customer' => $customerId]);
                 })
                 ->sort(),
+            
 
-                TD::make('customer.email', __('Customer Email'))
+            TD::make('customer.email', __('Customer Email'))
                 ->render(function (Subscription $subscription) {
                     return $subscription->customer->email;
                 })

@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
+use App\Services\GoogleOAuthService;
+use App\Http\Controllers\GoogleOAuthController;
 
 
 /*
@@ -25,3 +27,10 @@ Route::get('/expiration_reminder', function () {
     
     return new App\Mail\ExpirationReminder($subscription);
 });
+
+Route::get('/oauth2callback', [GoogleOAuthController::class, 'handleGoogleCallback'])->name('oauth2.callback');
+
+Route::get('/auth/google', function () {
+    $googleOAuthService = new \App\Services\GoogleOAuthService();
+    return redirect($googleOAuthService->getAuthorizationUrl());
+})->name('oauth2.google');

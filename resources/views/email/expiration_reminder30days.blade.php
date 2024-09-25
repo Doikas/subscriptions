@@ -18,7 +18,7 @@
          <table width="600" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse;">
             <tr>
                <td align="center" bgcolor="#f5f5f5" style="padding: 40px 0 25px 0;" colspan="3">
-                  <a href="https://wdesign.gr"><img src="https://subscriptions.wdesign.gr/images/WDesign%20logo.png" style="max-width: 180px;"></a>
+                  <a href="https://subscription.gr"><img src="" style="max-width: 180px;"></a>
                   <h2 style="color: #333333;">Service expires within 30 days</h2>
                </td>
             </tr>
@@ -34,14 +34,14 @@
                      <b>Ημερομηνία Λήξης: </b> {{ $expired_date }}
                   </p>
                   <p></p>
-                  <p>Για να ανανεώσετε την υπηρεσία σας, παρακαλούμε επικοινωνήστε μαζί μας στο <a href="tel:+302661400437">+30 2661 400 437</a>
-                     ή στο <a href="mailto:info@wdesign.gr">info@wdesign.gr</a> </p>
+                  <p>Για να ανανεώσετε την υπηρεσία σας, παρακαλούμε επικοινωνήστε μαζί μας στο <a href="tel:+30266666666">+30 26666666666</a>
+                     ή στο <a href="mailto:example@gmail.com">example@gmail.com</a> </p>
                   <p></p>
                   <p>Σας ευχαριστούμε πολύ!</p>
                   <p></p>
                   <p>Με εκτίμηση,</p>
                   <p>
-                     Ομάδα Wdesign<br>
+                     Ομάδα Subscriptions<br>
                   </p>
 
 
@@ -50,10 +50,10 @@
             </tr>
             <tr>
                <td align="center" bgcolor="#f5f5f5" style="padding: 20px;" colspan="3">
-                  <p style="color: #999999; font-size: 12px;"><a href="https://wdesign.gr">Wdesign.gr</a> - Web design & Digital marketing<br>
-                     N. Λευτεριώτη 18, 49100 Κέρκυρα,
-                     <a href="tel:+302661400437">+30 2661 400437</a>,
-                     <a href="mailto:info@wdesign.gr">info@wdesign.gr</a>
+                  <p style="color: #999999; font-size: 12px;"><a href="https://subscriptions.gr">Subscriptions.gr</a> - Web Software<br>
+                     Address,
+                     <a href="tel:+3026666666">+30 266666666</a>,
+                     <a href="mailto:example@gmail.com">example@gmail.com</a>
                   </p>
                </td>
             </tr>

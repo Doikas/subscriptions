@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Wdesign'),
+    'name' => env('APP_NAME', 'Subscriptions'),
 
     /*
     |--------------------------------------------------------------------------

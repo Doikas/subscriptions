@@ -28,62 +28,82 @@ class PlatformProvider extends OrchidServiceProvider
     public function registerMainMenu(): array
     {
         return [
-            Menu::make('Example screen')
-                ->icon('monitor')
-                ->route('platform.example')
-                ->title('Navigation')
-                ->badge(fn () => 6),
+            // Menu::make('Example screen')
+            //     ->icon('monitor')
+            //     ->route('platform.example')
+            //     ->title('Navigation')
+            //     ->badge(fn () => 6),
 
-            Menu::make('Dropdown menu')
-                ->icon('code')
-                ->list([
-                    Menu::make('Sub element item 1')->icon('bag'),
-                    Menu::make('Sub element item 2')->icon('heart'),
-                ]),
+            // Menu::make('Dropdown menu')
+            //     ->icon('code')
+            //     ->list([
+            //         Menu::make('Sub element item 1')->icon('bag'),
+            //         Menu::make('Sub element item 2')->icon('heart'),
+            //     ]),
 
-            Menu::make('Basic Elements')
-                ->title('Form controls')
-                ->icon('note')
-                ->route('platform.example.fields'),
+            // Menu::make('Basic Elements')
+            //     ->title('Form controls')
+            //     ->icon('note')
+            //     ->route('platform.example.fields'),
 
-            Menu::make('Advanced Elements')
-                ->icon('briefcase')
-                ->route('platform.example.advanced'),
+            // Menu::make('Advanced Elements')
+            //     ->icon('briefcase')
+            //     ->route('platform.example.advanced'),
 
-            Menu::make('Text Editors')
+            // Menu::make('Text Editors')
+            //     ->icon('list')
+            //     ->route('platform.example.editors'),
+
+            // Menu::make('Overview layouts')
+            //     ->title('Layouts')
+            //     ->icon('layers')
+            //     ->route('platform.example.layouts'),
+
+            // Menu::make('Chart tools')
+            //     ->icon('bar-chart')
+            //     ->route('platform.example.charts'),
+
+            // Menu::make('Cards')
+            //     ->icon('grid')
+            //     ->route('platform.example.cards')
+            //     ->divider(),
+
+            // Menu::make('Documentation')
+            //     ->title('Docs')
+            //     ->icon('docs')
+            //     ->url('https://orchid.software/en/docs'),
+
+            // Menu::make('Changelog')
+            //     ->icon('shuffle')
+            //     ->url('https://github.com/orchidsoftware/platform/blob/master/CHANGELOG.md')
+            //     ->target('_blank')
+            //     ->badge(fn () => Dashboard::version(), Color::DARK()),
+
+            Menu::make(__('Home'))
                 ->icon('list')
-                ->route('platform.example.editors'),
+                ->route('platform.main')
+                ->title(__('Navigation Menu')),
 
-            Menu::make('Overview layouts')
-                ->title('Layouts')
-                ->icon('layers')
-                ->route('platform.example.layouts'),
+            Menu::make(__('Customers'))
+                ->icon('user')
+                ->route('platform.systems.customers'),
 
-            Menu::make('Chart tools')
-                ->icon('bar-chart')
-                ->route('platform.example.charts'),
+            Menu::make(__('Services'))
+                ->icon('list')
+                ->route('platform.systems.services'),
 
-            Menu::make('Cards')
-                ->icon('grid')
-                ->route('platform.example.cards')
-                ->divider(),
-
-            Menu::make('Documentation')
-                ->title('Docs')
-                ->icon('docs')
-                ->url('https://orchid.software/en/docs'),
-
-            Menu::make('Changelog')
-                ->icon('shuffle')
-                ->url('https://github.com/orchidsoftware/platform/blob/master/CHANGELOG.md')
-                ->target('_blank')
-                ->badge(fn () => Dashboard::version(), Color::DARK()),
+            Menu::make(__('Subscriptions'))
+                ->icon('list')
+                ->route('platform.systems.subscriptions'),
+                
+            Menu::make(__('Email Logs'))
+                ->icon('list')
+                ->route('platform.systems.emailogs'),
 
             Menu::make(__('Users'))
                 ->icon('user')
                 ->route('platform.systems.users')
-                ->permission('platform.systems.users')
-                ->title(__('Access rights')),
+                ->permission('platform.systems.users'),
 
             Menu::make(__('Roles'))
                 ->icon('lock')

@@ -1,0 +1,35 @@
+.sendstatusemail {
+  background-color: #1b8b98;
+  border: 1px solid #1b8b98;
+  border-radius: 30px;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-weight: 600;
+  font-size: 12px;
+  padding: 0 18px;
+  line-height: 30px;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.sendstatusemail:hover {
+  background-color: #379DA7;
+}
+
+@media (min-width: 768px) {
+  .sendstatusemail {
+    min-width: 105px;
+    padding: 0 10px;
+  }
+}
+.px-md-5 {
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+}
+.container-md.h-full.px-0.px-md-5 {
+  max-width:1650px !important;
+}

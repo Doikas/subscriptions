@@ -6,10 +6,13 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
+        "google/apiclient": "^2.0",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
+        "league/oauth2-google": "^4.0",
+        "maatwebsite/excel": "*",
         "orchid/platform": "^13.9"
     },
     "require-dev": {
@@ -26,7 +29,10 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "app/FunctionHelper.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

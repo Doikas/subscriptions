@@ -17,6 +17,14 @@ use App\Orchid\Screens\User\UserListScreen;
 use App\Orchid\Screens\User\UserProfileScreen;
 use Illuminate\Support\Facades\Route;
 use Tabuna\Breadcrumbs\Trail;
+use App\Orchid\Screens\Customer\CustomerListScreen;
+use App\Orchid\Screens\Customer\CustomerEditScreen;
+use App\Orchid\Screens\Services\ServiceListScreen;
+use App\Orchid\Screens\Services\ServiceEditScreen;
+use App\Orchid\Screens\Subscriptions\SubscriptionListScreen;
+use App\Orchid\Screens\Subscriptions\SubscriptionEditScreen;
+use App\Http\Controllers\ServiceController;
+use App\Orchid\Screens\EmailLog\EmailLogListScreen;
 
 /*
 |--------------------------------------------------------------------------
@@ -97,3 +105,79 @@ Route::screen('example-cards', ExampleCardsScreen::class)->name('platform.exampl
 Route::screen('example-advanced', ExampleFieldsAdvancedScreen::class)->name('platform.example.advanced');
 
 //Route::screen('idea', Idea::class, 'platform.screens.idea');
+
+
+// Route::screen('customers', CustomerScreen::class)->name('platform.customers');
+Route::screen('customers', CustomerListScreen::class)
+    ->name('platform.systems.customers')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(__('Customers'), route('platform.systems.customers')));
+        
+Route::screen('services', ServiceListScreen::class)
+    ->name('platform.systems.services')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(__('Services'), route('platform.systems.services')));
+
+Route::screen('subscriptions', SubscriptionListScreen::class)
+    ->name('platform.systems.subscriptions')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(__('Subscriptions'), route('platform.systems.subscriptions')));
+
+// Platform > System > Customers > Edit
+Route::screen('customers/{customer}/edit', CustomerEditScreen::class)
+    ->name('platform.systems.customers.edit')
+    ->breadcrumbs(fn (Trail $trail, $customer) => $trail
+        ->parent('platform.systems.customers')
+        ->push(__('Customer'), route('platform.systems.customers.edit', $customer)));
+
+// Platform > System > Customers > Create
+Route::screen('customers/create', CustomerEditScreen::class)
+    ->name('platform.systems.customers.create')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.systems.customers')
+        ->push(__('Create'), route('platform.systems.customers.create')));
+
+// Platform > System > Services > Edit
+Route::screen('services/{service}/edit', ServiceEditScreen::class)
+->name('platform.systems.services.edit')
+->breadcrumbs(fn (Trail $trail, $service) => $trail
+    ->parent('platform.systems.services')
+    ->push(__('Service'), route('platform.systems.services.edit', $service)));
+
+// Platform > System > Services > Create
+Route::screen('services/create', ServiceEditScreen::class)
+->name('platform.systems.services.create')
+->breadcrumbs(fn (Trail $trail) => $trail
+    ->parent('platform.systems.services')
+    ->push(__('Create'), route('platform.systems.services.create')));
+
+    // Platform > System > Subscription > Edit
+Route::screen('subscriptions/{subscription}/edit', SubscriptionEditScreen::class)
+->name('platform.systems.subscriptions.edit')
+->breadcrumbs(fn (Trail $trail, $subscription) => $trail
+    ->parent('platform.systems.subscriptions')
+    ->push(__('Subscription'), route('platform.systems.subscriptions.edit', $subscription)));
+
+// Platform > System > Subscription > Create
+Route::screen('subscriptions/create', SubscriptionEditScreen::class)
+->name('platform.systems.subscriptions.create')
+->breadcrumbs(fn (Trail $trail) => $trail
+    ->parent('platform.systems.subscriptions')
+    ->push(__('Create'), route('platform.systems.subscriptions.create')));
+
+Route::get('subscriptions/get-expiration/{serviceId}', [ServiceController::class, 'getExpiration'])
+    ->name('platform.service.getExpiration');
+
+Route::post('/send-status-email/{id}', [SubscriptionListScreen::class, 'sendStatusEmail'])
+    ->name('platform.subscriptions.sendStatusEmail');
+
+Route::screen('emaillogs', EmailLogListScreen::class)
+    ->name('platform.systems.emailogs')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(__('Email Logs'), route('platform.systems.emailogs')));
+
+            

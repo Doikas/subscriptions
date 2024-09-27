@@ -3,18 +3,16 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Mail\ExpirationReminder30Days;
-use App\Mail\ExpirationReminder5Days;
-use App\Mail\ExpirationReminder0Days;
 use App\Models\Subscription;
 use App\Models\EmailLog;
-use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Address;
+use App\Jobs\SendEmailJob;
+
 
 class SubscriptionExpirationReminder extends Command
 {
@@ -57,9 +55,8 @@ class SubscriptionExpirationReminder extends Command
         $accessToken = $googleClient->fetchAccessTokenWithRefreshToken(env('GOOGLE_REFRESH_TOKEN'));
 
         // Set up the mailer with OAuth2 transport
-        $email = new \Symfony\Component\Mime\Email();
         $transport = new \Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport(
-        'smtp.gmail.com', 587, false
+            'smtp.gmail.com', 587, false
         );
         $transport->setUsername(env('MAIL_USERNAME'));
         $transport->setPassword($accessToken['access_token']);
@@ -77,9 +74,8 @@ class SubscriptionExpirationReminder extends Command
                     continue;
                 }
             }
-            $expiredDate = Carbon::parse($subscription->expired_date);
-            $emailSentSuccessfully = false;
 
+            $expiredDate = Carbon::parse($subscription->expired_date);
             if ($expiredDate->isFuture() || $expiredDate->isToday()) {
                 $daysUntilExpiration = $present->startOfDay()->diffInDays($expiredDate->startOfDay());
 
@@ -104,20 +100,14 @@ class SubscriptionExpirationReminder extends Command
                 }
 
                 if (!empty($subject) && !empty($content)) {
+                    // Dispatch the email job to the queue instead of sending directly
                     try {
-                        $email = (new \Symfony\Component\Mime\Email())
-                            ->from(new \Symfony\Component\Mime\Address(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME')))
-                            ->to($subscription->customer->email)
-                            ->cc($ccEmail)
-                            ->subject($subject)
-                            ->html($content);
+                        SendEmailJob::dispatch($subscription, $ccEmail, $subject, $content);
 
-                        $mailer->send($email);
-
-                        $emailSentSuccessfully = true;
                         $subscription->update(['last_email_automation_sent_at' => now()]);
 
-                        $this->insertEmailLog($subscription->id, $subject, $content, $emailSentSuccessfully);
+                        // Optional: log the job dispatching for easier debugging
+                        $this->insertEmailLog($subscription->id, $subject, $content, true);
                     } catch (\Exception $e) {
                         Log::error('Auto email sending failed: ' . $e->getMessage());
                     }
@@ -146,7 +136,7 @@ class SubscriptionExpirationReminder extends Command
 
     private function insertEmailLog($subscriptionId, $subject, $content, $sentSuccessfully)
     {
-        $emailLog = new EmailLog();
+        $emailLog = new \App\Models\EmailLog();
         $emailLog->subscription_id = $subscriptionId;
         $emailLog->subject = $subject;
         $emailLog->content = $content;
